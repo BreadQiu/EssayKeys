@@ -84,6 +84,10 @@ describe("application flow", () => {
     expect(
       screen.getByRole("button", { name: /泡泡按键/ }),
     ).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByLabelText("音效试打输入区")).toHaveFocus();
+    expect(
+      screen.queryByRole("button", { name: "点击这里开始试打" }),
+    ).not.toBeInTheDocument();
 
     await user.click(screen.getByRole("button", { name: "返回首页" }));
     expect(

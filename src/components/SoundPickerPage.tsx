@@ -2,6 +2,7 @@ import {
   type ChangeEvent,
   type ClipboardEvent,
   type KeyboardEvent,
+  type RefObject,
   useEffect,
   useReducer,
   useRef,
@@ -30,7 +31,13 @@ type SoundPickerPageProps = {
   onGoHome: () => void;
 };
 
-function SoundTrial({ selectedPackId }: { selectedPackId: string }) {
+function SoundTrial({
+  selectedPackId,
+  inputRef,
+}: {
+  selectedPackId: string;
+  inputRef: RefObject<HTMLTextAreaElement | null>;
+}) {
   const [session, dispatch] = useReducer(
     (
       state: typeof initialSession,
@@ -38,7 +45,6 @@ function SoundTrial({ selectedPackId }: { selectedPackId: string }) {
     ) => updateSession(state, action, TRIAL_TEXT),
     initialSession,
   );
-  const inputRef = useRef<HTMLTextAreaElement>(null);
   const [inputFocused, setInputFocused] = useState(false);
   const [completedLoops, setCompletedLoops] = useState(0);
   const actualText = session.typed.map((character) => character.actual).join("");
@@ -197,11 +203,13 @@ export function SoundPickerPage({
   onGoHome,
 }: SoundPickerPageProps) {
   const selectedPack = getSoundPack(selectedPackId);
+  const trialInputRef = useRef<HTMLTextAreaElement>(null);
 
   function selectPack(packId: string) {
     onSelectPack(packId);
     unlockKeySounds(packId);
     playKeySound("type", true, packId);
+    trialInputRef.current?.focus();
   }
 
   return (
@@ -267,7 +275,10 @@ export function SoundPickerPage({
           </div>
 
           <aside className="sound-trial-column">
-            <SoundTrial selectedPackId={selectedPack.id} />
+            <SoundTrial
+              selectedPackId={selectedPack.id}
+              inputRef={trialInputRef}
+            />
           </aside>
         </div>
       </main>
