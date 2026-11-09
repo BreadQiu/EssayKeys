@@ -4,7 +4,12 @@ export type EssayDefinition = {
   paragraphs: string[];
 };
 
-export const essays: EssayDefinition[] = [
+const rawEssays: EssayDefinition[] = [
+  {
+    id: "welcome-experiment",
+    title: "Welcome to EssayKeys!",
+    paragraphs: ["Welcome to EssayKeys!"],
+  },
   {
     id: "free-university",
     title: "Should University Education Be Free for Everyone?",
@@ -37,12 +42,21 @@ export const essays: EssayDefinition[] = [
   },
 ];
 
+export function removeSpacesAfterPunctuation(text: string): string {
+  return text.replace(/([.!?,:;])\s+(?=\S)/g, "$1");
+}
+
+export const essays: EssayDefinition[] = rawEssays.map((essay) => ({
+  ...essay,
+  paragraphs: essay.paragraphs.map(removeSpacesAfterPunctuation),
+}));
+
 export function getEssayById(id: string): EssayDefinition | undefined {
   return essays.find((essay) => essay.id === id);
 }
 
 export function getEssayTarget(essay: EssayDefinition): string {
-  return essay.paragraphs.join(" ");
+  return essay.paragraphs.join("");
 }
 
 export function countWords(essay: EssayDefinition): number {

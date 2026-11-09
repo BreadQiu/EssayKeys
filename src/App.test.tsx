@@ -15,7 +15,10 @@ describe("application flow", () => {
     render(<App />);
 
     expect(screen.getByRole("heading", { name: "雅思计时打字" })).toBeVisible();
-    expect(screen.getAllByRole("button", { name: /开始练习/ })).toHaveLength(3);
+    expect(screen.getAllByRole("button", { name: /开始练习/ })).toHaveLength(4);
+    expect(
+      screen.getByRole("heading", { name: "Welcome to EssayKeys!" }),
+    ).toBeVisible();
 
     await user.click(screen.getAllByRole("button", { name: /开始练习/ })[0]);
     expect(

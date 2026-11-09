@@ -69,11 +69,7 @@ function EssayBody({
       {essay.paragraphs.map((paragraph, paragraphIndex) => {
         const characters = Array.from(paragraph);
         const startIndex = characterIndex;
-        const spacerIndex =
-          paragraphIndex < essay.paragraphs.length - 1
-            ? startIndex + characters.length
-            : -1;
-        characterIndex = startIndex + characters.length + (spacerIndex >= 0 ? 1 : 0);
+        characterIndex = startIndex + characters.length;
 
         return (
           <p key={paragraphIndex}>
@@ -86,17 +82,6 @@ function EssayBody({
                 isCurrent={startIndex + index === typed.length}
               />
             ))}
-            {spacerIndex >= 0 ? (
-              <>
-                <Character
-                  character=" "
-                  typed={typed[spacerIndex]}
-                  index={spacerIndex}
-                  isCurrent={spacerIndex === typed.length}
-                />
-                <span className="paragraph-separator" />
-              </>
-            ) : null}
           </p>
         );
       })}
