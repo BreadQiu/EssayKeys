@@ -49,30 +49,41 @@ describe("typing session", () => {
     expect(result.finishedAt).toBe(10);
   });
 
-  it("joins paragraphs with a single typed space", () => {
-    const target = "First. Second.";
-    const result = updateSession(
+  it("requires a typed line break between paragraphs", () => {
+    const target = "First.\nSecond.";
+    const firstParagraph = updateSession(
       initialSession,
-      { type: "input", text: "First. Second.", at: 10 },
+      { type: "input", text: "First.", at: 10 },
+      target,
+    );
+
+    expect(firstParagraph.typed).toHaveLength(6);
+    expect(firstParagraph.finishedAt).toBeNull();
+
+    const result = updateSession(
+      firstParagraph,
+      { type: "input", text: "\nSecond.", at: 20 },
       target,
     );
 
     expect(result.typed[6]).toEqual({
-      expected: " ",
-      actual: " ",
+      expected: "\n",
+      actual: "\n",
       correct: true,
     });
-    expect(result.finishedAt).toBe(10);
+    expect(result.finishedAt).toBe(20);
   });
 
-  it("ignores line breaks inserted by the keyboard", () => {
+  it("treats line breaks as strict characters", () => {
     const result = updateSession(
       initialSession,
       { type: "input", text: "a\nb", at: 10 },
-      "ab",
+      "a\nb",
     );
 
-    expect(result.typed.map((character) => character.actual).join("")).toBe("ab");
+    expect(result.typed.map((character) => character.actual).join("")).toBe(
+      "a\nb",
+    );
   });
 
   it("backs up multiple characters and resets timing when empty", () => {

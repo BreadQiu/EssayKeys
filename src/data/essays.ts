@@ -58,7 +58,7 @@ export function getEssayById(id: string): EssayDefinition | undefined {
 }
 
 export function getEssayTarget(essay: EssayDefinition): string {
-  return essay.paragraphs.join("");
+  return essay.paragraphs.join("\n");
 }
 
 export function countWords(essay: EssayDefinition): number {

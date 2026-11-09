@@ -572,6 +572,37 @@ textarea:focus-visible {
   content: " ";
 }
 
+.character.line-break {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.55em;
+  height: 1.45em;
+  margin: 0 0.12em;
+  border: 1px solid rgba(126, 131, 126, 0.28);
+  border-radius: 5px;
+  color: #8a8d88;
+  font-family: "Segoe UI Symbol", "Segoe UI", sans-serif;
+  font-size: 0.68em;
+  line-height: 1;
+  vertical-align: 0.18em;
+}
+
+.character.line-break.correct {
+  border-color: rgba(47, 102, 82, 0.28);
+  color: var(--green);
+}
+
+.character.line-break.incorrect {
+  border-color: rgba(181, 66, 61, 0.3);
+  color: var(--red);
+}
+
+.character.line-break.current {
+  border-color: rgba(171, 139, 17, 0.28);
+  color: #1d2923;
+}
+
 .practice-footnote {
   display: flex;
   justify-content: space-between;

@@ -1,7 +1,6 @@
 import {
   type ClipboardEvent,
   type ChangeEvent,
-  type KeyboardEvent,
   type MouseEvent,
   useEffect,
   useLayoutEffect,
@@ -46,14 +45,17 @@ function Character({
       ? "correct"
       : "incorrect"
     : "pending";
+  const isLineBreak = character === "\n";
 
   return (
     <span
-      className={`character ${state}${isCurrent ? " current" : ""}`}
+      className={`character ${state}${isCurrent ? " current" : ""}${
+        isLineBreak ? " line-break" : ""
+      }`}
       data-character-index={index}
       aria-hidden="true"
     >
-      {character}
+      {isLineBreak ? "↵" : character}
     </span>
   );
 }
@@ -72,7 +74,9 @@ function EssayBody({
       {essay.paragraphs.map((paragraph, paragraphIndex) => {
         const characters = Array.from(paragraph);
         const startIndex = characterIndex;
-        characterIndex = startIndex + characters.length;
+        const paragraphEndIndex = startIndex + characters.length;
+        const isLastParagraph = paragraphIndex === essay.paragraphs.length - 1;
+        characterIndex = paragraphEndIndex + (isLastParagraph ? 0 : 1);
 
         return (
           <p key={paragraphIndex}>
@@ -85,6 +89,14 @@ function EssayBody({
                 isCurrent={startIndex + index === typed.length}
               />
             ))}
+            {!isLastParagraph ? (
+              <Character
+                character={"\n"}
+                typed={typed[paragraphEndIndex]}
+                index={paragraphEndIndex}
+                isCurrent={paragraphEndIndex === typed.length}
+              />
+            ) : null}
           </p>
         );
       })}
@@ -226,7 +238,7 @@ export function PracticePage({
     if (nextValue.length > actualText.length && nextValue.startsWith(actualText)) {
       const inserted = nextValue
         .slice(actualText.length)
-        .replace(/[\r\n]/g, "");
+        .replace(/\r\n?/g, "\n");
 
       if (inserted.length > 0) {
         dispatch({ type: "input", text: inserted, at: Date.now() });
@@ -247,12 +259,6 @@ export function PracticePage({
     }
 
     input.value = actualText;
-  }
-
-  function handleKeyDown(event: KeyboardEvent<HTMLTextAreaElement>) {
-    if (event.key === "Enter") {
-      event.preventDefault();
-    }
   }
 
   function handlePaste(event: ClipboardEvent<HTMLTextAreaElement>) {
@@ -342,7 +348,7 @@ export function PracticePage({
 
         <div className="practice-footnote">
           <span>第一次按键后开始计时</span>
-          <span>退格可撤销 · 切换页面不会暂停</span>
+          <span>段末按 Enter 换行 · 退格可撤销</span>
         </div>
       </main>
 
@@ -351,7 +357,6 @@ export function PracticePage({
         className="typing-input"
         value={actualText}
         onChange={handleInputChange}
-        onKeyDown={handleKeyDown}
         onPaste={handlePaste}
         onFocus={() => setInputFocused(true)}
         onBlur={() => setInputFocused(false)}

@@ -33,7 +33,7 @@ describe("essay data", () => {
     }
   });
 
-  it("connects adjacent paragraphs without an extra space", () => {
-    expect(getEssayTarget(essays[0])).toContain("issue.While");
+  it("connects adjacent paragraphs with a required line break", () => {
+    expect(getEssayTarget(essays[0])).toContain("sustainable.\nThe");
   });
 });

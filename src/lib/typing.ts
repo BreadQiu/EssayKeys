@@ -51,10 +51,6 @@ export function updateSession(
   const typed = state.typed.slice();
 
   for (const character of Array.from(action.text)) {
-    if (character === "\n" || character === "\r") {
-      continue;
-    }
-
     if (typed.length >= target.length) {
       break;
     }

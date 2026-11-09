@@ -17,7 +17,7 @@ export function HomePage({
         <p className="wordmark" aria-label="EssayKeys">
           Essay<em>Keys</em>
         </p>
-        <p className="brand-note">雅思文章计时打字 · V2</p>
+        <p className="brand-note">雅思文章计时打字 · v0.3.0</p>
       </div>
 
       <header className="hero">
@@ -91,7 +91,7 @@ export function HomePage({
 
       <footer className="home-footer">
         <p>第一次按键后开始计时 · 完成后查看总用时</p>
-        <span>EssayKeys · V2</span>
+        <span>EssayKeys · v0.3.0</span>
       </footer>
     </div>
   );
