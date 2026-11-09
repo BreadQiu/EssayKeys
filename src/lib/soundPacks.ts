@@ -27,6 +27,7 @@ export type KeySoundPack = {
   category: SoundCategory;
   description: string;
   sounds: Record<KeySoundKind, SoundRecipe>;
+  sampleAudio?: Record<KeySoundKind, string>;
 };
 
 export const SOUND_CATEGORY_LABELS: Record<SoundCategory, string> = {
@@ -200,6 +201,20 @@ export const SOUND_PACKS: KeySoundPack[] = [
           },
         ],
       },
+    },
+  },
+  {
+    id: "edclub",
+    name: "EdClub 原声",
+    category: "ordinary",
+    description: "直接使用参考站的原始敲击声和错误声，打字与删字完全一致。",
+    sounds: {
+      type: { noises: [], tones: [] },
+      error: { noises: [], tones: [] },
+    },
+    sampleAudio: {
+      type: "audio/edclub/typewriter.mp3",
+      error: "audio/edclub/error.mp3",
     },
   },
   {

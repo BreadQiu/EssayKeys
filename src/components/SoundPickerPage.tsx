@@ -66,7 +66,7 @@ function SoundTrial({ selectedPackId }: { selectedPackId: string }) {
   }, [isComplete]);
 
   function focusInput() {
-    unlockKeySounds();
+    unlockKeySounds(selectedPackId);
     inputRef.current?.focus();
   }
 
@@ -200,7 +200,7 @@ export function SoundPickerPage({
 
   function selectPack(packId: string) {
     onSelectPack(packId);
-    unlockKeySounds();
+    unlockKeySounds(packId);
     playKeySound("type", true, packId);
   }
 

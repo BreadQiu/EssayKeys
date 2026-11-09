@@ -11,11 +11,21 @@ type BrowserAudioContext = typeof AudioContext;
 
 let audioContext: AudioContext | null = null;
 let clickBuffer: AudioBuffer | null = null;
+const SAMPLE_POOL_SIZE = 6;
+const samplePools = new Map<
+  string,
+  { players: HTMLAudioElement[]; nextIndex: number }
+>();
 
-export function unlockKeySounds(): void {
+export function unlockKeySounds(packId = DEFAULT_SOUND_PACK_ID): void {
   const context = getAudioContext();
   if (context?.state === "suspended") {
     void context.resume().catch(() => undefined);
+  }
+
+  const sample = getSoundPack(packId).sampleAudio?.type;
+  if (sample) {
+    getSamplePool(sample);
   }
 }
 
@@ -112,12 +122,55 @@ function scheduleNoise(
   source.start(startAt);
 }
 
+function getSamplePool(path: string) {
+  const existing = samplePools.get(path);
+  if (existing) {
+    return existing;
+  }
+
+  const url = new URL(path, document.baseURI).href;
+  const pool = {
+    players: Array.from({ length: SAMPLE_POOL_SIZE }, () => {
+      const player = new Audio(url);
+      player.preload = "auto";
+      player.volume = 0.8;
+      player.load();
+      return player;
+    }),
+    nextIndex: 0,
+  };
+  samplePools.set(path, pool);
+  return pool;
+}
+
+function playSample(path: string): void {
+  if (typeof document === "undefined") {
+    return;
+  }
+
+  const pool = getSamplePool(path);
+  const player = pool.players[pool.nextIndex];
+  pool.nextIndex = (pool.nextIndex + 1) % pool.players.length;
+  player.currentTime = 0;
+  const result = player.play();
+  if (result) {
+    void result.catch(() => undefined);
+  }
+}
+
 export function playKeySound(
   kind: KeySoundKind,
   enabled = true,
   packId = DEFAULT_SOUND_PACK_ID,
 ): void {
   if (!enabled) {
+    return;
+  }
+
+  const pack = getSoundPack(packId);
+  const sample = pack.sampleAudio?.[kind];
+  if (sample) {
+    playSample(sample);
     return;
   }
 
@@ -130,7 +183,7 @@ export function playKeySound(
     void context.resume().catch(() => undefined);
   }
 
-  const recipe = getSoundPack(packId).sounds[kind];
+  const recipe = pack.sounds[kind];
   const startAt = context.currentTime + 0.002;
 
   for (const noise of recipe.noises) {

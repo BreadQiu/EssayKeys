@@ -215,7 +215,7 @@ export function PracticePage({
 
   function focusInput(event?: MouseEvent<HTMLElement>) {
     event?.preventDefault();
-    unlockKeySounds();
+    unlockKeySounds(soundPackId);
     inputRef.current?.focus();
   }
 

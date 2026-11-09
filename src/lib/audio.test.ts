@@ -14,6 +14,7 @@ type FakeOscillator = {
 describe("key sounds", () => {
   afterEach(() => {
     vi.resetModules();
+    vi.unstubAllGlobals();
     Reflect.deleteProperty(window, "AudioContext");
   });
 
@@ -113,5 +114,36 @@ describe("key sounds", () => {
 
     expect(createOscillator).not.toHaveBeenCalled();
     expect(createBufferSource).not.toHaveBeenCalled();
+  });
+
+  it("uses the exact EdClub sample files for its reference pack", async () => {
+    const played: string[] = [];
+
+    class FakeAudio {
+      preload = "";
+      volume = 1;
+      currentTime = 0;
+      src: string;
+
+      constructor(src: string) {
+        this.src = src;
+      }
+
+      load() {}
+
+      play() {
+        played.push(this.src);
+        return Promise.resolve();
+      }
+    }
+
+    vi.stubGlobal("Audio", FakeAudio);
+    const { playKeySound } = await import("./audio");
+
+    playKeySound("type", true, "edclub");
+    playKeySound("error", true, "edclub");
+
+    expect(played[0]).toContain("/audio/edclub/typewriter.mp3");
+    expect(played[1]).toContain("/audio/edclub/error.mp3");
   });
 });
