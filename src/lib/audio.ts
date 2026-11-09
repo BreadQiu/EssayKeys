@@ -14,6 +14,13 @@ type Tone = {
 let audioContext: AudioContext | null = null;
 let clickBuffer: AudioBuffer | null = null;
 
+export function unlockKeySounds(): void {
+  const context = getAudioContext();
+  if (context?.state === "suspended") {
+    void context.resume().catch(() => undefined);
+  }
+}
+
 function getAudioContext(): AudioContext | null {
   if (typeof window === "undefined") {
     return null;

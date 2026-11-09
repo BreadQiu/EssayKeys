@@ -18,7 +18,7 @@ import {
   updateSession,
   type TypedCharacter,
 } from "../lib/typing";
-import { playKeySound } from "../lib/audio";
+import { playKeySound, unlockKeySounds } from "../lib/audio";
 
 type PracticePageProps = {
   essay: EssayDefinition;
@@ -210,6 +210,7 @@ export function PracticePage({
 
   function focusInput(event?: MouseEvent<HTMLElement>) {
     event?.preventDefault();
+    unlockKeySounds();
     inputRef.current?.focus();
   }
 
