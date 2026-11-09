@@ -2,16 +2,22 @@ import { countWords, essays } from "../data/essays";
 
 type HomePageProps = {
   onSelectEssay: (id: string) => void;
+  onOpenSoundSettings: () => void;
+  activeSoundPackName: string;
 };
 
-export function HomePage({ onSelectEssay }: HomePageProps) {
+export function HomePage({
+  onSelectEssay,
+  onOpenSoundSettings,
+  activeSoundPackName,
+}: HomePageProps) {
   return (
     <div className="home-page">
       <div className="brand-bar">
         <p className="wordmark" aria-label="EssayKeys">
           Essay<em>Keys</em>
         </p>
-        <p className="brand-note">雅思文章计时打字 · V1</p>
+        <p className="brand-note">雅思文章计时打字 · V2</p>
       </div>
 
       <header className="hero">
@@ -28,6 +34,22 @@ export function HomePage({ onSelectEssay }: HomePageProps) {
       </header>
 
       <main>
+        <button
+          className="sound-entry"
+          type="button"
+          onClick={onOpenSoundSettings}
+        >
+          <span className="sound-entry-icon" aria-hidden="true">
+            ♪
+          </span>
+          <span className="sound-entry-copy">
+            <span className="section-kicker">SOUND SETTINGS</span>
+            <strong>音效</strong>
+            <span>当前使用：{activeSoundPackName}</span>
+          </span>
+          <span className="sound-entry-action">挑选音效 →</span>
+        </button>
+
         <div className="section-heading">
           <div>
             <p className="section-kicker">PRACTICE ARTICLES</p>
@@ -43,9 +65,16 @@ export function HomePage({ onSelectEssay }: HomePageProps) {
                 {String(index + 1).padStart(2, "0")}
               </div>
               <div className="essay-card-copy">
-                <p className="essay-label">IELTS TASK 2 · 高分范文</p>
+                <p className="essay-label">
+                  {essay.isExperiment
+                    ? "EXPERIMENT · 实验用短文"
+                    : "IELTS TASK 2 · 高分范文"}
+                </p>
                 <h3>{essay.title}</h3>
-                <p className="essay-meta">约 {countWords(essay)} 词 · 整篇计时</p>
+                <p className="essay-meta">
+                  约 {countWords(essay)} 词 ·{" "}
+                  {essay.isExperiment ? "仅用于功能实验" : "整篇计时"}
+                </p>
               </div>
               <button
                 className="start-button"
@@ -62,7 +91,7 @@ export function HomePage({ onSelectEssay }: HomePageProps) {
 
       <footer className="home-footer">
         <p>第一次按键后开始计时 · 完成后查看总用时</p>
-        <span>EssayKeys · V1</span>
+        <span>EssayKeys · V2</span>
       </footer>
     </div>
   );

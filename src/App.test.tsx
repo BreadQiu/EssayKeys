@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import App from "./App";
@@ -6,7 +6,9 @@ import { essays, getEssayTarget } from "./data/essays";
 
 beforeEach(() => {
   window.history.replaceState(null, "", "/");
+  window.localStorage.clear();
   vi.restoreAllMocks();
+  vi.useRealTimers();
 });
 
 describe("application flow", () => {
@@ -17,7 +19,9 @@ describe("application flow", () => {
     expect(screen.getByRole("heading", { name: "雅思计时打字" })).toBeVisible();
     expect(screen.getAllByRole("button", { name: /开始练习/ })).toHaveLength(4);
     expect(
-      screen.getByRole("heading", { name: "Welcome to EssayKeys!" }),
+      screen.getByRole("heading", {
+        name: "Should University Education Be Free for Everyone?",
+      }),
     ).toBeVisible();
 
     await user.click(screen.getAllByRole("button", { name: /开始练习/ })[0]);
@@ -59,5 +63,49 @@ describe("application flow", () => {
     expect(
       screen.getByRole("heading", { name: "没有找到这篇文章" }),
     ).toBeVisible();
+  });
+
+  it("opens the sound picker and persists the selected pack", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    await user.click(
+      screen.getByRole("button", { name: /音效.*经典打字机/ }),
+    );
+
+    expect(
+      screen.getByRole("heading", { name: "选择你的按键音" }),
+    ).toBeVisible();
+    expect(
+      screen.getByRole("button", { name: /经典打字机/ }),
+    ).toHaveAttribute("aria-pressed", "true");
+
+    await user.click(screen.getByRole("button", { name: /泡泡按键/ }));
+    expect(
+      screen.getByRole("button", { name: /泡泡按键/ }),
+    ).toHaveAttribute("aria-pressed", "true");
+
+    await user.click(screen.getByRole("button", { name: "返回首页" }));
+    expect(
+      screen.getByRole("button", { name: /泡泡按键/ }),
+    ).toBeVisible();
+  });
+
+  it("automatically restarts the sound trial after one complete sentence", () => {
+    vi.useFakeTimers();
+    window.history.replaceState(null, "", "/#/sounds");
+    render(<App />);
+
+    const input = screen.getByLabelText("音效试打输入区");
+    fireEvent.change(input, {
+      target: { value: "Welcome to EssayKeys!" },
+    });
+
+    expect(screen.getByText("完成一次，正在重新开始…")).toBeVisible();
+    act(() => {
+      vi.advanceTimersByTime(700);
+    });
+    expect(screen.getByText("已完成 1 次")).toBeVisible();
+    expect(input).toHaveValue("");
   });
 });

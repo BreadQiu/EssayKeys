@@ -7,10 +7,14 @@ import {
 } from "./essays";
 
 describe("essay data", () => {
-  it("places the short experiment article first", () => {
-    expect(essays[0].title).toBe("Welcome to EssayKeys!");
-    expect(getEssayTarget(essays[0])).toBe("Welcome to EssayKeys!");
-    expect(countWords(essays[0])).toBe(3);
+  it("places the short experiment article last and marks it clearly", () => {
+    const experiment = essays.at(-1);
+    expect(experiment?.title).toBe("Welcome to EssayKeys!");
+    expect(experiment?.isExperiment).toBe(true);
+    expect(experiment && getEssayTarget(experiment)).toBe(
+      "Welcome to EssayKeys!",
+    );
+    expect(experiment && countWords(experiment)).toBe(3);
   });
 
   it("removes whitespace after every punctuation mark", () => {
@@ -30,6 +34,6 @@ describe("essay data", () => {
   });
 
   it("connects adjacent paragraphs without an extra space", () => {
-    expect(getEssayTarget(essays[1])).toContain("issue.While");
+    expect(getEssayTarget(essays[0])).toContain("issue.While");
   });
 });

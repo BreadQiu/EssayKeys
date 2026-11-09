@@ -2,14 +2,10 @@ export type EssayDefinition = {
   id: string;
   title: string;
   paragraphs: string[];
+  isExperiment?: boolean;
 };
 
 const rawEssays: EssayDefinition[] = [
-  {
-    id: "welcome-experiment",
-    title: "Welcome to EssayKeys!",
-    paragraphs: ["Welcome to EssayKeys!"],
-  },
   {
     id: "free-university",
     title: "Should University Education Be Free for Everyone?",
@@ -39,6 +35,12 @@ const rawEssays: EssayDefinition[] = [
       "For organisations, remote work can reduce spending on office space and allow them to recruit talented staff from a much wider geographical area. However, managers cannot always see how work is progressing, so they must rely on clear goals and measurable results. New employees may also find it harder to learn from colleagues remotely, while spontaneous discussions and creative teamwork can become less frequent. If businesses overlook these difficulties, productivity and workplace culture may suffer.",
       "In conclusion, remote work is good for both parties when it is used with appropriate support. Employees benefit from flexibility, and employers gain lower costs and access to broader talent. To preserve collaboration and trust, however, companies should combine remote arrangements with regular communication and occasional face-to-face meetings.",
     ],
+  },
+  {
+    id: "welcome-experiment",
+    title: "Welcome to EssayKeys!",
+    paragraphs: ["Welcome to EssayKeys!"],
+    isExperiment: true,
   },
 ];
 

@@ -25,6 +25,9 @@ type PracticePageProps = {
   onGoHome: () => void;
   onDirtyChange: (dirty: boolean) => void;
   requestGoHome: () => void;
+  soundPackId: string;
+  soundEnabled: boolean;
+  onSoundEnabledChange: (enabled: boolean) => void;
 };
 
 function Character({
@@ -126,6 +129,9 @@ export function PracticePage({
   onGoHome,
   onDirtyChange,
   requestGoHome,
+  soundPackId,
+  soundEnabled,
+  onSoundEnabledChange,
 }: PracticePageProps) {
   const target = getEssayTarget(essay);
   const [session, dispatch] = useReducer(
@@ -135,7 +141,6 @@ export function PracticePage({
   );
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const [inputFocused, setInputFocused] = useState(false);
-  const [soundEnabled, setSoundEnabled] = useState(true);
   const actualText = session.typed.map((character) => character.actual).join("");
   const isFinished = session.finishedAt !== null;
   const isDirty = session.typed.length > 0 && !isFinished;
@@ -230,13 +235,14 @@ export function PracticePage({
             ? "type"
             : "error",
           soundEnabled,
+          soundPackId,
         );
       }
     } else if (actualText.startsWith(nextValue)) {
       const removedCount = actualText.length - nextValue.length;
       if (removedCount > 0) {
         dispatch({ type: "backspace", count: removedCount });
-        playKeySound("type", soundEnabled);
+        playKeySound("type", soundEnabled, soundPackId);
       }
     }
 
@@ -254,7 +260,7 @@ export function PracticePage({
   }
 
   function toggleSound() {
-    setSoundEnabled((enabled) => !enabled);
+    onSoundEnabledChange(!soundEnabled);
     inputRef.current?.focus();
   }
 
@@ -295,7 +301,11 @@ export function PracticePage({
       <main className="practice-main">
         <section className="lesson-intro" aria-labelledby="essay-heading">
           <div>
-            <p className="lesson-kicker">IELTS TASK 2 · 高分范文</p>
+            <p className="lesson-kicker">
+              {essay.isExperiment
+                ? "EXPERIMENT · 实验用短文"
+                : "IELTS TASK 2 · 高分范文"}
+            </p>
             <h1 id="essay-heading">{essay.title}</h1>
           </div>
           <p className="progress-number">{Math.round(progress * 100)}%</p>

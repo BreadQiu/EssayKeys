@@ -1,17 +1,28 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { HomePage } from "./components/HomePage";
 import { PracticePage } from "./components/PracticePage";
+import { SoundPickerPage } from "./components/SoundPickerPage";
 import { getEssayById } from "./data/essays";
+import { getSoundPack } from "./lib/soundPacks";
+import {
+  loadSoundPreferences,
+  saveSoundPreferences,
+} from "./lib/soundPreferences";
 
 type Route =
   | { name: "home" }
   | { name: "essay"; essayId: string }
+  | { name: "sounds" }
   | { name: "not-found" };
 
 function readRoute(): Route {
   const hash = window.location.hash;
   if (!hash || hash === "#" || hash === "#/") {
     return { name: "home" };
+  }
+
+  if (hash === "#/sounds") {
+    return { name: "sounds" };
   }
 
   const match = hash.match(/^#\/essay\/([^/]+)$/);
@@ -28,6 +39,9 @@ function readRoute(): Route {
 
 export default function App() {
   const [route, setRoute] = useState<Route>(() => readRoute());
+  const [soundPreferences, setSoundPreferences] = useState(() =>
+    loadSoundPreferences(),
+  );
   const routeRef = useRef(route);
   const isDirtyRef = useRef(false);
   const allowNavigationRef = useRef(false);
@@ -36,6 +50,10 @@ export default function App() {
   useEffect(() => {
     routeRef.current = route;
   }, [route]);
+
+  useEffect(() => {
+    saveSoundPreferences(soundPreferences);
+  }, [soundPreferences]);
 
   useEffect(() => {
     function handleHashChange() {
@@ -84,6 +102,12 @@ export default function App() {
     setRoute({ name: "home" });
   }, []);
 
+  const navigateToSounds = useCallback(() => {
+    window.location.hash = "#/sounds";
+    lastAcceptedHashRef.current = "#/sounds";
+    setRoute({ name: "sounds" });
+  }, []);
+
   const requestGoHome = useCallback(() => {
     if (
       isDirtyRef.current &&
@@ -98,8 +122,38 @@ export default function App() {
     isDirtyRef.current = dirty;
   }, []);
 
+  const selectSoundPack = useCallback((packId: string) => {
+    setSoundPreferences((preferences) => ({
+      ...preferences,
+      packId: getSoundPack(packId).id,
+    }));
+  }, []);
+
+  const setSoundEnabled = useCallback((enabled: boolean) => {
+    setSoundPreferences((preferences) => ({
+      ...preferences,
+      enabled,
+    }));
+  }, []);
+
   if (route.name === "home") {
-    return <HomePage onSelectEssay={navigateToEssay} />;
+    return (
+      <HomePage
+        onSelectEssay={navigateToEssay}
+        onOpenSoundSettings={navigateToSounds}
+        activeSoundPackName={getSoundPack(soundPreferences.packId).name}
+      />
+    );
+  }
+
+  if (route.name === "sounds") {
+    return (
+      <SoundPickerPage
+        selectedPackId={soundPreferences.packId}
+        onSelectPack={selectSoundPack}
+        onGoHome={navigateHome}
+      />
+    );
   }
 
   if (route.name === "not-found") {
@@ -134,6 +188,9 @@ export default function App() {
       onGoHome={navigateHome}
       onDirtyChange={handleDirtyChange}
       requestGoHome={requestGoHome}
+      soundPackId={soundPreferences.packId}
+      soundEnabled={soundPreferences.enabled}
+      onSoundEnabledChange={setSoundEnabled}
     />
   );
 }

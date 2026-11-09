@@ -1,15 +1,13 @@
-export type KeySoundKind = "type" | "error";
+import {
+  DEFAULT_SOUND_PACK_ID,
+  getSoundPack,
+  type KeySoundKind,
+  type SoundTone,
+} from "./soundPacks";
+
+export type { KeySoundKind } from "./soundPacks";
 
 type BrowserAudioContext = typeof AudioContext;
-type Tone = {
-  wave: OscillatorType;
-  startFrequency: number;
-  endFrequency: number;
-  duration: number;
-  volume: number;
-  attack: number;
-  delay?: number;
-};
 
 let audioContext: AudioContext | null = null;
 let clickBuffer: AudioBuffer | null = null;
@@ -76,7 +74,7 @@ function getClickBuffer(context: AudioContext): AudioBuffer {
 
 function scheduleTone(
   context: AudioContext,
-  tone: Tone,
+  tone: SoundTone,
   startAt: number,
 ): void {
   const oscillator = context.createOscillator();
@@ -117,6 +115,7 @@ function scheduleNoise(
 export function playKeySound(
   kind: KeySoundKind,
   enabled = true,
+  packId = DEFAULT_SOUND_PACK_ID,
 ): void {
   if (!enabled) {
     return;
@@ -131,107 +130,18 @@ export function playKeySound(
     void context.resume().catch(() => undefined);
   }
 
+  const recipe = getSoundPack(packId).sounds[kind];
   const startAt = context.currentTime + 0.002;
 
-  if (kind === "error") {
-    scheduleNoise(context, startAt, 0.01);
-    scheduleTone(
+  for (const noise of recipe.noises) {
+    scheduleNoise(
       context,
-      {
-        wave: "sine",
-        startFrequency: 786,
-        endFrequency: 782,
-        duration: 0.25,
-        volume: 0.038,
-        attack: 0.008,
-      },
-      startAt,
+      startAt + (noise.delay ?? 0),
+      noise.volume,
     );
-    scheduleTone(
-      context,
-      {
-        wave: "triangle",
-        startFrequency: 792,
-        endFrequency: 788,
-        duration: 0.205,
-        volume: 0.009,
-        attack: 0.012,
-      },
-      startAt,
-    );
-    scheduleTone(
-      context,
-      {
-        wave: "sine",
-        startFrequency: 98,
-        endFrequency: 92,
-        duration: 0.07,
-        volume: 0.006,
-        attack: 0.003,
-      },
-      startAt,
-    );
-    return;
   }
 
-  scheduleNoise(context, startAt, 0.025);
-  scheduleNoise(context, startAt + 0.018, 0.36);
-  for (const tone of [
-    {
-      wave: "triangle",
-      startFrequency: 6_650,
-      endFrequency: 5_200,
-      duration: 0.026,
-      volume: 0.02,
-      attack: 0.001,
-      delay: 0.015,
-    },
-    {
-      wave: "sine",
-      startFrequency: 4_850,
-      endFrequency: 2_350,
-      duration: 0.052,
-      volume: 0.034,
-      attack: 0.0015,
-      delay: 0.018,
-    },
-    {
-      wave: "sine",
-      startFrequency: 2_688,
-      endFrequency: 2_400,
-      duration: 0.026,
-      volume: 0.012,
-      attack: 0.001,
-      delay: 0.009,
-    },
-    {
-      wave: "triangle",
-      startFrequency: 2_300,
-      endFrequency: 950,
-      duration: 0.12,
-      volume: 0.011,
-      attack: 0.002,
-      delay: 0.03,
-    },
-    {
-      wave: "sine",
-      startFrequency: 944,
-      endFrequency: 900,
-      duration: 0.2,
-      volume: 0.005,
-      attack: 0.004,
-      delay: 0.04,
-    },
-    {
-      wave: "triangle",
-      startFrequency: 544,
-      endFrequency: 470,
-      duration: 0.23,
-      volume: 0.003,
-      attack: 0.004,
-      delay: 0.045,
-    },
-  ] satisfies Tone[]) {
+  for (const tone of recipe.tones) {
     scheduleTone(context, tone, startAt);
   }
 }
