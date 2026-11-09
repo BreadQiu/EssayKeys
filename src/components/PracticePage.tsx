@@ -14,6 +14,7 @@ import {
   formatDuration,
   getElapsedTime,
   initialSession,
+  isInsertionCorrect,
   updateSession,
   type TypedCharacter,
 } from "../lib/typing";
@@ -238,13 +239,18 @@ export function PracticePage({
 
       if (inserted.length > 0) {
         dispatch({ type: "input", text: inserted, at: Date.now() });
-        playKeySound("type", soundEnabled);
+        playKeySound(
+          isInsertionCorrect(inserted, target, session.typed.length)
+            ? "type"
+            : "error",
+          soundEnabled,
+        );
       }
     } else if (actualText.startsWith(nextValue)) {
       const removedCount = actualText.length - nextValue.length;
       if (removedCount > 0) {
         dispatch({ type: "backspace", count: removedCount });
-        playKeySound("delete", soundEnabled);
+        playKeySound("type", soundEnabled);
       }
     }
 

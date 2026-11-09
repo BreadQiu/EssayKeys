@@ -3,6 +3,7 @@ import {
   formatDuration,
   getElapsedTime,
   initialSession,
+  isInsertionCorrect,
   updateSession,
 } from "./typing";
 
@@ -94,5 +95,11 @@ describe("typing session", () => {
     expect(formatDuration(0)).toBe("00:00");
     expect(formatDuration(59_500)).toBe("01:00");
     expect(formatDuration(125_000)).toBe("02:05");
+  });
+
+  it("classifies correct and incorrect input for sound feedback", () => {
+    expect(isInsertionCorrect("Hel", "Hello", 0)).toBe(true);
+    expect(isInsertionCorrect("Hex", "Hello", 0)).toBe(false);
+    expect(isInsertionCorrect("lo", "Hello", 3)).toBe(true);
   });
 });

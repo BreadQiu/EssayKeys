@@ -17,13 +17,34 @@ describe("key sounds", () => {
     Reflect.deleteProperty(window, "AudioContext");
   });
 
-  it("schedules distinct bright sounds for typing and deleting", async () => {
+  it("uses a broadband transient for typing and a lower tone for errors", async () => {
     const oscillators: FakeOscillator[] = [];
+    const sources: Array<{
+      buffer: AudioBuffer | null;
+      start: ReturnType<typeof vi.fn>;
+    }> = [];
 
     class FakeAudioContext {
       state = "running";
       currentTime = 2;
+      sampleRate = 44_100;
       destination = {};
+
+      createBuffer() {
+        return {
+          getChannelData: () => new Float32Array(16),
+        } as unknown as AudioBuffer;
+      }
+
+      createBufferSource() {
+        const source = {
+          buffer: null as AudioBuffer | null,
+          connect: vi.fn(),
+          start: vi.fn(),
+        };
+        sources.push(source);
+        return source;
+      }
 
       createOscillator() {
         const oscillator: FakeOscillator = {
@@ -62,22 +83,24 @@ describe("key sounds", () => {
 
     const { playKeySound } = await import("./audio");
     playKeySound("type");
-    playKeySound("delete");
+    const typeToneCount = oscillators.length;
+    playKeySound("error");
 
-    expect(oscillators).toHaveLength(2);
-    const typeFrequency =
-      oscillators[0].frequency.setValueAtTime.mock.calls[0][0] as number;
-    const deleteFrequency =
-      oscillators[1].frequency.setValueAtTime.mock.calls[0][0] as number;
-    expect(typeFrequency).toBeGreaterThan(deleteFrequency);
-    expect(oscillators[0].start).toHaveBeenCalledOnce();
-    expect(oscillators[1].stop).toHaveBeenCalledOnce();
+    expect(sources).toHaveLength(3);
+    expect(sources.every((source) => source.buffer !== null)).toBe(true);
+    expect(typeToneCount).toBe(6);
+    expect(oscillators).toHaveLength(9);
+    const errorFrequency =
+      oscillators[typeToneCount].frequency.setValueAtTime.mock.calls[0][0];
+    expect(errorFrequency).toBe(786);
   });
 
   it("does nothing when sound is disabled", async () => {
     const createOscillator = vi.fn();
+    const createBufferSource = vi.fn();
     class UnusedAudioContext {
       createOscillator = createOscillator;
+      createBufferSource = createBufferSource;
     }
 
     Object.defineProperty(window, "AudioContext", {
@@ -89,5 +112,6 @@ describe("key sounds", () => {
     playKeySound("type", false);
 
     expect(createOscillator).not.toHaveBeenCalled();
+    expect(createBufferSource).not.toHaveBeenCalled();
   });
 });

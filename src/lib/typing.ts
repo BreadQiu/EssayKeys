@@ -93,3 +93,13 @@ export function getElapsedTime(state: SessionState): number {
 
   return Math.max(0, state.finishedAt - state.startedAt);
 }
+
+export function isInsertionCorrect(
+  text: string,
+  target: string,
+  startIndex: number,
+): boolean {
+  return Array.from(text).every(
+    (character, index) => character === target[startIndex + index],
+  );
+}
