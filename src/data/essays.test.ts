@@ -3,7 +3,6 @@ import {
   countWords,
   essays,
   getEssayTarget,
-  removeSpacesAfterPunctuation,
 } from "./essays";
 
 describe("essay data", () => {
@@ -17,18 +16,11 @@ describe("essay data", () => {
     expect(experiment && countWords(experiment)).toBe(3);
   });
 
-  it("removes whitespace after every punctuation mark", () => {
-    expect(
-      removeSpacesAfterPunctuation(
-        "First sentence. Second sentence, then another! Is this ready? Yes: go; now.",
-      ),
-    ).toBe(
-      "First sentence.Second sentence,then another!Is this ready?Yes:go;now.",
-    );
-
+  it("preserves spaces after punctuation", () => {
+    expect(getEssayTarget(essays[0])).toContain("issue. While");
     for (const essay of essays) {
       for (const paragraph of essay.paragraphs) {
-        expect(paragraph).not.toMatch(/[.!?,:;]\s+\S/);
+        expect(paragraph).not.toMatch(/[.!?,:;]\S/);
       }
     }
   });

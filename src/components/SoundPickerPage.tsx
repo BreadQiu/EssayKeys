@@ -22,7 +22,7 @@ import {
 } from "../lib/typing";
 
 const TRIAL_TEXT = "Welcome to EssayKeys!";
-const RESET_DELAY_MS = 700;
+const RESET_DELAY_MS = 120;
 const CATEGORY_ORDER: SoundCategory[] = ["ordinary", "cute", "prank"];
 
 type SoundPickerPageProps = {
@@ -48,7 +48,6 @@ function SoundTrial({
   const [inputFocused, setInputFocused] = useState(false);
   const [completedLoops, setCompletedLoops] = useState(0);
   const actualText = session.typed.map((character) => character.actual).join("");
-  const progress = session.typed.length / TRIAL_TEXT.length;
   const isComplete = session.finishedAt !== null;
 
   useEffect(() => {
@@ -157,22 +156,9 @@ function SoundTrial({
         </span>
       </button>
 
-      <div
-        className="trial-progress"
-        role="progressbar"
-        aria-label="试打进度"
-        aria-valuemin={0}
-        aria-valuemax={100}
-        aria-valuenow={Math.round(progress * 100)}
-      >
-        <span style={{ width: `${progress * 100}%` }} />
-      </div>
-
       <div className="trial-status" aria-live="polite">
         <span>已完成 {completedLoops} 次</span>
-        <strong>
-          {isComplete ? "完成一次，正在重新开始…" : "输入中"}
-        </strong>
+        <strong>输入中</strong>
       </div>
 
       <textarea

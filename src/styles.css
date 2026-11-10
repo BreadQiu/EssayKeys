@@ -392,10 +392,6 @@ textarea:focus-visible {
 }
 
 .lesson-intro {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: end;
-  gap: 16px 28px;
   padding-bottom: 20px;
   border-bottom: 1px solid var(--line);
 }
@@ -415,27 +411,6 @@ textarea:focus-visible {
   margin: 9px 0 0;
   color: var(--muted);
   font-size: 12px;
-}
-
-.progress-number {
-  margin: 0 0 2px;
-  color: var(--muted);
-  font-size: 11px;
-  font-variant-numeric: tabular-nums;
-}
-
-.progress-track {
-  grid-column: 1 / -1;
-  overflow: hidden;
-  height: 2px;
-  background: var(--line);
-}
-
-.progress-track span {
-  display: block;
-  height: 100%;
-  background: var(--green);
-  transition: width 120ms linear;
 }
 
 .focus-prompt {
@@ -812,20 +787,6 @@ textarea:focus-visible {
   line-height: 1.55;
   text-align: left;
   cursor: text;
-}
-
-.trial-progress {
-  overflow: hidden;
-  height: 2px;
-  margin-top: 14px;
-  background: var(--line);
-}
-
-.trial-progress span {
-  display: block;
-  height: 100%;
-  background: var(--green);
-  transition: width 100ms linear;
 }
 
 .trial-status {

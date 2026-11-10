@@ -44,14 +44,7 @@ const rawEssays: EssayDefinition[] = [
   },
 ];
 
-export function removeSpacesAfterPunctuation(text: string): string {
-  return text.replace(/([.!?,:;])\s+(?=\S)/g, "$1");
-}
-
-export const essays: EssayDefinition[] = rawEssays.map((essay) => ({
-  ...essay,
-  paragraphs: essay.paragraphs.map(removeSpacesAfterPunctuation),
-}));
+export const essays: EssayDefinition[] = rawEssays;
 
 export function getEssayById(id: string): EssayDefinition | undefined {
   return essays.find((essay) => essay.id === id);

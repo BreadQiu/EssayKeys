@@ -1,143 +1,96 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-type FakeOscillator = {
-  type: OscillatorType;
-  frequency: {
-    setValueAtTime: ReturnType<typeof vi.fn>;
-    exponentialRampToValueAtTime: ReturnType<typeof vi.fn>;
-  };
-  connect: ReturnType<typeof vi.fn>;
-  start: ReturnType<typeof vi.fn>;
-  stop: ReturnType<typeof vi.fn>;
-};
+function createAudioStub() {
+  const constructed: string[] = [];
+  const loaded: string[] = [];
+  const played: string[] = [];
+
+  class FakeAudio {
+    preload = "";
+    volume = 1;
+    currentTime = 0;
+    paused = true;
+    ended = false;
+
+    constructor(public src: string) {
+      constructed.push(src);
+    }
+
+    load() {
+      loaded.push(this.src);
+    }
+
+    play() {
+      this.paused = false;
+      played.push(this.src);
+      return Promise.resolve();
+    }
+  }
+
+  vi.stubGlobal("Audio", FakeAudio);
+  return { constructed, loaded, played };
+}
 
 describe("key sounds", () => {
   afterEach(() => {
     vi.resetModules();
     vi.unstubAllGlobals();
-    Reflect.deleteProperty(window, "AudioContext");
   });
 
-  it("uses a broadband transient for typing and a lower tone for errors", async () => {
-    const oscillators: FakeOscillator[] = [];
-    const sources: Array<{
-      buffer: AudioBuffer | null;
-      start: ReturnType<typeof vi.fn>;
-    }> = [];
-
-    class FakeAudioContext {
-      state = "running";
-      currentTime = 2;
-      sampleRate = 44_100;
-      destination = {};
-
-      createBuffer() {
-        return {
-          getChannelData: () => new Float32Array(16),
-        } as unknown as AudioBuffer;
-      }
-
-      createBufferSource() {
-        const source = {
-          buffer: null as AudioBuffer | null,
-          connect: vi.fn(),
-          start: vi.fn(),
-        };
-        sources.push(source);
-        return source;
-      }
-
-      createOscillator() {
-        const oscillator: FakeOscillator = {
-          type: "sine",
-          frequency: {
-            setValueAtTime: vi.fn(),
-            exponentialRampToValueAtTime: vi.fn(),
-          },
-          connect: vi.fn(),
-          start: vi.fn(),
-          stop: vi.fn(),
-        };
-        oscillators.push(oscillator);
-        return oscillator;
-      }
-
-      createGain() {
-        return {
-          gain: {
-            setValueAtTime: vi.fn(),
-            exponentialRampToValueAtTime: vi.fn(),
-          },
-          connect: vi.fn(),
-        };
-      }
-
-      resume() {
-        return Promise.resolve();
-      }
-    }
-
-    Object.defineProperty(window, "AudioContext", {
-      configurable: true,
-      value: FakeAudioContext,
-    });
-
+  it("plays the paired sample files for the selected pack", async () => {
+    const { played } = createAudioStub();
     const { playKeySound } = await import("./audio");
-    playKeySound("type");
-    const typeToneCount = oscillators.length;
-    playKeySound("error");
 
-    expect(sources).toHaveLength(3);
-    expect(sources.every((source) => source.buffer !== null)).toBe(true);
-    expect(typeToneCount).toBe(6);
-    expect(oscillators).toHaveLength(9);
-    const errorFrequency =
-      oscillators[typeToneCount].frequency.setValueAtTime.mock.calls[0][0];
-    expect(errorFrequency).toBe(786);
+    playKeySound("type", true, "butter-thock");
+    playKeySound("error", true, "butter-thock");
+
+    expect(played[0]).toContain(
+      "/audio/essaykeys/butter-thock-type.mp3",
+    );
+    expect(played[1]).toContain(
+      "/audio/essaykeys/butter-thock-error.mp3",
+    );
+  });
+
+  it("preloads both samples in a pair when sounds are unlocked", async () => {
+    const { constructed, loaded, played } = createAudioStub();
+    const { unlockKeySounds } = await import("./audio");
+
+    unlockKeySounds("spring-boing");
+
+    expect(constructed).toHaveLength(12);
+    expect(loaded).toHaveLength(12);
+    expect(
+      loaded.some((path) => path.includes("spring-boing-type.mp3")),
+    ).toBe(true);
+    expect(
+      loaded.some((path) => path.includes("spring-boing-error.mp3")),
+    ).toBe(true);
+    expect(played).toHaveLength(0);
   });
 
   it("does nothing when sound is disabled", async () => {
-    const createOscillator = vi.fn();
-    const createBufferSource = vi.fn();
-    class UnusedAudioContext {
-      createOscillator = createOscillator;
-      createBufferSource = createBufferSource;
-    }
-
-    Object.defineProperty(window, "AudioContext", {
-      configurable: true,
-      value: UnusedAudioContext,
-    });
-
+    const { constructed } = createAudioStub();
     const { playKeySound } = await import("./audio");
+
     playKeySound("type", false);
 
-    expect(createOscillator).not.toHaveBeenCalled();
-    expect(createBufferSource).not.toHaveBeenCalled();
+    expect(constructed).toHaveLength(0);
+  });
+
+  it("expands the player pool instead of cutting off rapid key presses", async () => {
+    const { constructed } = createAudioStub();
+    const { playKeySound } = await import("./audio");
+
+    for (let index = 0; index < 20; index += 1) {
+      playKeySound("type", true, "edclub");
+    }
+
+    expect(constructed).toHaveLength(16);
   });
 
   it("uses the exact EdClub sample files for its reference pack", async () => {
-    const played: string[] = [];
-
-    class FakeAudio {
-      preload = "";
-      volume = 1;
-      currentTime = 0;
-      src: string;
-
-      constructor(src: string) {
-        this.src = src;
-      }
-
-      load() {}
-
-      play() {
-        played.push(this.src);
-        return Promise.resolve();
-      }
-    }
-
-    vi.stubGlobal("Audio", FakeAudio);
+    const { played } = createAudioStub();
     const { playKeySound } = await import("./audio");
 
     playKeySound("type", true, "edclub");

@@ -97,7 +97,7 @@
       "kind": "button",
       "refersTo": "sound-menu",
       "description": "Quiet utility entry showing the active sound pack.",
-      "html": "<button class=\"ds-sound-menu\"><span>♪</span><span>音效</span><span>经典打字机</span></button>",
+      "html": "<button class=\"ds-sound-menu\"><span>♪</span><span>音效</span><span>黄油重键</span></button>",
       "css": ".ds-sound-menu { display: inline-flex; min-height: 40px; align-items: center; gap: 7px; padding: 0 12px; border: 1px solid #cfd6d0; border-radius: 8px; background: #fff; color: #18221d; font-family: Aptos, Segoe UI, PingFang SC, sans-serif; font-size: 12px; cursor: pointer; } .ds-sound-menu span:first-child { color: #285c49; font-size: 15px; } .ds-sound-menu:hover { border-color: #285c49; } .ds-sound-menu:focus-visible { outline: 2px solid #285c49; outline-offset: 3px; }"
     },
     {
@@ -111,7 +111,7 @@
       "name": "Sound Row",
       "kind": "chip",
       "description": "Compact selectable sound pack row with a radio-like marker.",
-      "html": "<button class=\"ds-sound-row ds-selected\"><span>●</span><span><strong>经典打字机</strong><small>参考站的机械敲击声</small></span><em>已选择</em></button>",
+      "html": "<button class=\"ds-sound-row ds-selected\"><span>●</span><span><strong>黄油重键</strong><small>低沉厚实的润滑线性轴</small></span><em>已选择</em></button>",
       "css": ".ds-sound-row { display: grid; grid-template-columns: 16px minmax(0,1fr) auto; min-height: 76px; align-items: center; gap: 12px; padding: 12px 8px; border: 0; border-bottom: 1px solid #cfd6d0; background: transparent; color: #18221d; text-align: left; font-family: Aptos, Segoe UI, PingFang SC, sans-serif; cursor: pointer; } .ds-sound-row span:first-child { color: #69736d; } .ds-sound-row span:nth-child(2) { display: grid; gap: 4px; } .ds-sound-row strong { font-size: 16px; } .ds-sound-row small { color: #69736d; font-size: 11px; } .ds-sound-row em { color: #69736d; font-size: 11px; font-style: normal; } .ds-sound-row.ds-selected { border-radius: 8px; background: #e2ece6; outline: 1px solid #285c49; outline-offset: -1px; } .ds-sound-row.ds-selected span:first-child, .ds-sound-row.ds-selected em { color: #285c49; } .ds-sound-row:focus-visible { outline: 2px solid #285c49; outline-offset: 3px; }"
     },
     {

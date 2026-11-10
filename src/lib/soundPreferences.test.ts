@@ -16,9 +16,9 @@ describe("sound preferences", () => {
   });
 
   it("saves and restores the selected pack and enabled state", () => {
-    saveSoundPreferences({ packId: "bubble", enabled: false });
+    saveSoundPreferences({ packId: "bubble-pop", enabled: false });
     expect(loadSoundPreferences()).toEqual({
-      packId: "bubble",
+      packId: "bubble-pop",
       enabled: false,
     });
   });

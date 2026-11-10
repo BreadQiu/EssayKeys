@@ -160,7 +160,6 @@ export function PracticePage({
   const actualText = session.typed.map((character) => character.actual).join("");
   const isFinished = session.finishedAt !== null;
   const isDirty = session.typed.length > 0 && !isFinished;
-  const progress = target.length === 0 ? 0 : session.typed.length / target.length;
 
   useEffect(() => {
     onDirtyChange(isDirty);
@@ -321,17 +320,6 @@ export function PracticePage({
               {essay.isExperiment ? "实验短文" : "雅思 Task 2"} · 约{" "}
               {countWords(essay)} 词
             </p>
-          </div>
-          <p className="progress-number">{Math.round(progress * 100)}%</p>
-          <div
-            className="progress-track"
-            role="progressbar"
-            aria-label="练习进度"
-            aria-valuemin={0}
-            aria-valuemax={100}
-            aria-valuenow={Math.round(progress * 100)}
-          >
-            <span style={{ width: `${progress * 100}%` }} />
           </div>
         </section>
 

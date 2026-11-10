@@ -28,6 +28,9 @@ describe("application flow", () => {
     expect(
       screen.getByRole("heading", { name: essays[0].title }),
     ).toBeVisible();
+    expect(
+      screen.queryByRole("progressbar", { name: "练习进度" }),
+    ).not.toBeInTheDocument();
 
     const input = screen.getByLabelText("作文输入区");
     fireEvent.change(input, { target: { value: getEssayTarget(essays[0]) } });
@@ -70,19 +73,22 @@ describe("application flow", () => {
     render(<App />);
 
     await user.click(
-      screen.getByRole("button", { name: /音效.*经典打字机/ }),
+      screen.getByRole("button", { name: /音效.*黄油重键/ }),
     );
 
     expect(
       screen.getByRole("heading", { name: "按键音" }),
     ).toBeVisible();
     expect(
-      screen.getByRole("button", { name: /经典打字机/ }),
+      screen.queryByRole("progressbar", { name: "试打进度" }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /黄油重键/ }),
     ).toHaveAttribute("aria-pressed", "true");
 
-    await user.click(screen.getByRole("button", { name: /泡泡按键/ }));
+    await user.click(screen.getByRole("button", { name: /玻璃泡泡/ }));
     expect(
-      screen.getByRole("button", { name: /泡泡按键/ }),
+      screen.getByRole("button", { name: /玻璃泡泡/ }),
     ).toHaveAttribute("aria-pressed", "true");
     expect(screen.getByLabelText("音效试打输入区")).toHaveFocus();
     expect(
@@ -91,7 +97,7 @@ describe("application flow", () => {
 
     await user.click(screen.getByRole("button", { name: "返回首页" }));
     expect(
-      screen.getByRole("button", { name: /泡泡按键/ }),
+      screen.getByRole("button", { name: /玻璃泡泡/ }),
     ).toBeVisible();
   });
 
@@ -105,9 +111,11 @@ describe("application flow", () => {
       target: { value: "Welcome to EssayKeys!" },
     });
 
-    expect(screen.getByText("完成一次，正在重新开始…")).toBeVisible();
+    expect(
+      screen.queryByText("完成一次，正在重新开始…"),
+    ).not.toBeInTheDocument();
     act(() => {
-      vi.advanceTimersByTime(700);
+      vi.advanceTimersByTime(120);
     });
     expect(screen.getByText("已完成 1 次")).toBeVisible();
     expect(input).toHaveValue("");

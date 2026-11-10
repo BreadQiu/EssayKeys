@@ -19,7 +19,7 @@ export function HomePage({
             Essay<em>Keys</em>
           </p>
           <div className="app-header-actions">
-            <span className="version-label">v0.4.0</span>
+            <span className="version-label">v0.5.0</span>
             <button
               className="sound-menu-button"
               type="button"
