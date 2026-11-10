@@ -1,4 +1,10 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  type ReactNode,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { HomePage } from "./components/HomePage";
 import { PracticePage } from "./components/PracticePage";
 import { SoundPickerPage } from "./components/SoundPickerPage";
@@ -14,6 +20,24 @@ type Route =
   | { name: "essay"; essayId: string }
   | { name: "sounds" }
   | { name: "not-found" };
+
+function AppFrame({ children }: { children: ReactNode }) {
+  return (
+    <>
+      <a
+        className="skip-link"
+        href="#main-content"
+        onClick={(event) => {
+          event.preventDefault();
+          document.getElementById("main-content")?.focus();
+        }}
+      >
+        跳到主要内容
+      </a>
+      {children}
+    </>
+  );
+}
 
 function readRoute(): Route {
   const hash = window.location.hash;
@@ -138,59 +162,85 @@ export default function App() {
 
   if (route.name === "home") {
     return (
-      <HomePage
-        onSelectEssay={navigateToEssay}
-        onOpenSoundSettings={navigateToSounds}
-        activeSoundPackName={getSoundPack(soundPreferences.packId).name}
-      />
+      <AppFrame>
+        <HomePage
+          onSelectEssay={navigateToEssay}
+          onOpenSoundSettings={navigateToSounds}
+          activeSoundPackName={getSoundPack(soundPreferences.packId).name}
+        />
+      </AppFrame>
     );
   }
 
   if (route.name === "sounds") {
     return (
-      <SoundPickerPage
-        selectedPackId={soundPreferences.packId}
-        onSelectPack={selectSoundPack}
-        onGoHome={navigateHome}
-      />
+      <AppFrame>
+        <SoundPickerPage
+          selectedPackId={soundPreferences.packId}
+          onSelectPack={selectSoundPack}
+          onGoHome={navigateHome}
+        />
+      </AppFrame>
     );
   }
 
   if (route.name === "not-found") {
     return (
-      <main className="not-found">
-        <p className="eyebrow">404</p>
-        <h1>没有找到这篇文章</h1>
-        <button className="primary-button" type="button" onClick={navigateHome}>
-          返回首页
-        </button>
-      </main>
+      <AppFrame>
+        <main
+          className="not-found skip-target"
+          id="main-content"
+          tabIndex={-1}
+        >
+          <p className="eyebrow">404</p>
+          <h1>没有找到这篇文章</h1>
+          <button
+            className="primary-button"
+            type="button"
+            onClick={navigateHome}
+          >
+            返回首页
+          </button>
+        </main>
+      </AppFrame>
     );
   }
 
   const essay = getEssayById(route.essayId);
   if (!essay) {
     return (
-      <main className="not-found">
-        <p className="eyebrow">404</p>
-        <h1>没有找到这篇文章</h1>
-        <button className="primary-button" type="button" onClick={navigateHome}>
-          返回首页
-        </button>
-      </main>
+      <AppFrame>
+        <main
+          className="not-found skip-target"
+          id="main-content"
+          tabIndex={-1}
+        >
+          <p className="eyebrow">404</p>
+          <h1>没有找到这篇文章</h1>
+          <button
+            className="primary-button"
+            type="button"
+            onClick={navigateHome}
+          >
+            返回首页
+          </button>
+        </main>
+      </AppFrame>
     );
   }
 
   return (
-    <PracticePage
-      key={essay.id}
-      essay={essay}
-      onGoHome={navigateHome}
-      onDirtyChange={handleDirtyChange}
-      requestGoHome={requestGoHome}
-      soundPackId={soundPreferences.packId}
-      soundEnabled={soundPreferences.enabled}
-      onSoundEnabledChange={setSoundEnabled}
-    />
+    <AppFrame>
+      <PracticePage
+        key={essay.id}
+        essay={essay}
+        onGoHome={navigateHome}
+        onDirtyChange={handleDirtyChange}
+        requestGoHome={requestGoHome}
+        soundPackId={soundPreferences.packId}
+        soundEnabled={soundPreferences.enabled}
+        onSoundEnabledChange={setSoundEnabled}
+      />
+    </AppFrame>
   );
 }

@@ -16,7 +16,7 @@ describe("application flow", () => {
     const user = userEvent.setup();
     render(<App />);
 
-    expect(screen.getByRole("heading", { name: "雅思计时打字" })).toBeVisible();
+    expect(screen.getByRole("heading", { name: "EssayKeys" })).toBeVisible();
     expect(screen.getAllByRole("button", { name: /开始练习/ })).toHaveLength(4);
     expect(
       screen.getByRole("heading", {
@@ -38,7 +38,7 @@ describe("application flow", () => {
     expect(screen.getByText("总用时")).toBeVisible();
 
     await user.click(screen.getByRole("button", { name: "确认并返回" }));
-    expect(screen.getByRole("heading", { name: "雅思计时打字" })).toBeVisible();
+    expect(screen.getByRole("heading", { name: "EssayKeys" })).toBeVisible();
   });
 
   it("warns before discarding a partially typed essay", async () => {
@@ -74,7 +74,7 @@ describe("application flow", () => {
     );
 
     expect(
-      screen.getByRole("heading", { name: "选择你的按键音" }),
+      screen.getByRole("heading", { name: "按键音" }),
     ).toBeVisible();
     expect(
       screen.getByRole("button", { name: /经典打字机/ }),

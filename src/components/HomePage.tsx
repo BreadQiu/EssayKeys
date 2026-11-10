@@ -13,76 +13,59 @@ export function HomePage({
 }: HomePageProps) {
   return (
     <div className="home-page">
-      <div className="brand-bar">
-        <p className="wordmark" aria-label="EssayKeys">
-          Essay<em>Keys</em>
-        </p>
-        <p className="brand-note">雅思文章计时打字 · v0.3.0</p>
-      </div>
-
-      <header className="hero">
-        <p className="eyebrow">IELTS TYPING PRACTICE</p>
-        <h1>雅思计时打字</h1>
-        <p className="hero-copy">
-          选择一篇作文，从第一个字符开始计时。
-          <br />
-          专注于打完整篇文字。
-        </p>
-        <span className="hero-mark" aria-hidden="true">
-          Aa
-        </span>
+      <header className="app-header home-header">
+        <div className="app-header-inner">
+          <p className="wordmark" aria-label="EssayKeys">
+            Essay<em>Keys</em>
+          </p>
+          <div className="app-header-actions">
+            <span className="version-label">v0.4.0</span>
+            <button
+              className="sound-menu-button"
+              type="button"
+              onClick={onOpenSoundSettings}
+              aria-label={`音效，当前使用：${activeSoundPackName}`}
+            >
+              <span aria-hidden="true">♪</span>
+              <span>音效</span>
+              <span className="sound-menu-current">{activeSoundPackName}</span>
+            </button>
+          </div>
+        </div>
       </header>
 
-      <main>
-        <button
-          className="sound-entry"
-          type="button"
-          onClick={onOpenSoundSettings}
-        >
-          <span className="sound-entry-icon" aria-hidden="true">
-            ♪
-          </span>
-          <span className="sound-entry-copy">
-            <span className="section-kicker">SOUND SETTINGS</span>
-            <strong>音效</strong>
-            <span>当前使用：{activeSoundPackName}</span>
-          </span>
-          <span className="sound-entry-action">挑选音效 →</span>
-        </button>
+      <main className="home-main skip-target" id="main-content" tabIndex={-1}>
+        <section className="home-intro" aria-labelledby="home-heading">
+          <h1 id="home-heading">EssayKeys</h1>
+          <p className="home-subtitle">雅思文章打字练习</p>
+          <p className="home-description">选一篇范文，从第一个字符开始计时。</p>
+        </section>
 
         <div className="section-heading">
-          <div>
-            <p className="section-kicker">PRACTICE ARTICLES</p>
-            <h2>选择文章</h2>
-          </div>
+          <h2>文章</h2>
           <span>{essays.length} 篇</span>
         </div>
 
         <div className="essay-list">
-          {essays.map((essay, index) => (
-            <article className="essay-card" key={essay.id}>
-              <div className="essay-number" aria-hidden="true">
-                {String(index + 1).padStart(2, "0")}
-              </div>
+          {essays.map((essay) => (
+            <article
+              className={`essay-row${essay.isExperiment ? " experiment" : ""}`}
+              key={essay.id}
+            >
               <div className="essay-card-copy">
                 <p className="essay-label">
-                  {essay.isExperiment
-                    ? "EXPERIMENT · 实验用短文"
-                    : "IELTS TASK 2 · 高分范文"}
+                  {essay.isExperiment ? "实验" : "雅思 Task 2"}
                 </p>
                 <h3>{essay.title}</h3>
-                <p className="essay-meta">
-                  约 {countWords(essay)} 词 ·{" "}
-                  {essay.isExperiment ? "仅用于功能实验" : "整篇计时"}
-                </p>
               </div>
+              <p className="essay-meta">约 {countWords(essay)} 词</p>
               <button
                 className="start-button"
                 type="button"
                 onClick={() => onSelectEssay(essay.id)}
+                aria-label={`开始练习：${essay.title}`}
               >
-                开始练习
-                <span aria-hidden="true">→</span>
+                练习
               </button>
             </article>
           ))}
@@ -90,8 +73,8 @@ export function HomePage({
       </main>
 
       <footer className="home-footer">
-        <p>第一次按键后开始计时 · 完成后查看总用时</p>
-        <span>EssayKeys · v0.3.0</span>
+        <p>第一次按键后开始计时</p>
+        <span>完成后查看总用时</span>
       </footer>
     </div>
   );

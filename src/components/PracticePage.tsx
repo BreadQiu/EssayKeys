@@ -8,7 +8,11 @@ import {
   useRef,
   useState,
 } from "react";
-import { getEssayTarget, type EssayDefinition } from "../data/essays";
+import {
+  countWords,
+  getEssayTarget,
+  type EssayDefinition,
+} from "../data/essays";
 import {
   formatDuration,
   getElapsedTime,
@@ -114,12 +118,12 @@ function ResultCard({
   onGoHome: () => void;
 }) {
   return (
-    <main className="result-page">
-      <section className="result-card" aria-labelledby="result-heading">
-        <p className="result-kicker">SESSION COMPLETE</p>
-        <div className="result-check" aria-hidden="true">
-          ✓
-        </div>
+    <main
+      className="result-page skip-target"
+      id="main-content"
+      tabIndex={-1}
+    >
+      <section className="result-summary" aria-labelledby="result-heading">
         <h1 id="result-heading">练习完成</h1>
         <p className="result-essay-title">{essay.title}</p>
 
@@ -282,37 +286,41 @@ export function PracticePage({
 
   return (
     <div className="practice-page">
-      <header className="practice-header">
-        <button className="back-button" type="button" onClick={requestGoHome}>
-          <span aria-hidden="true">←</span>
-          返回文章
-        </button>
-        <p className="practice-mode">整篇计时练习</p>
-        <div className="practice-tools">
-          <p className="typing-status" aria-live="polite">
-            {session.startedAt === null ? "等待输入" : "计时中"}
-          </p>
-          <button
-            className="sound-toggle"
-            type="button"
-            aria-pressed={soundEnabled}
-            onClick={toggleSound}
-          >
-            <span aria-hidden="true">♪</span>
-            音效 {soundEnabled ? "开" : "关"}
+      <header className="app-header practice-header">
+        <div className="app-header-inner">
+          <button className="back-button" type="button" onClick={requestGoHome}>
+            <span aria-hidden="true">←</span>
+            返回文章
           </button>
+          <div className="practice-tools">
+            <p className="typing-status" aria-live="polite">
+              {session.startedAt === null ? "等待输入" : "计时中"}
+            </p>
+            <button
+              className="sound-toggle"
+              type="button"
+              aria-pressed={soundEnabled}
+              onClick={toggleSound}
+            >
+              <span aria-hidden="true">♪</span>
+              音效 {soundEnabled ? "开" : "关"}
+            </button>
+          </div>
         </div>
       </header>
 
-      <main className="practice-main">
+      <main
+        className="practice-main skip-target"
+        id="main-content"
+        tabIndex={-1}
+      >
         <section className="lesson-intro" aria-labelledby="essay-heading">
-          <div>
-            <p className="lesson-kicker">
-              {essay.isExperiment
-                ? "EXPERIMENT · 实验用短文"
-                : "IELTS TASK 2 · 高分范文"}
-            </p>
+          <div className="lesson-copy">
             <h1 id="essay-heading">{essay.title}</h1>
+            <p className="lesson-meta">
+              {essay.isExperiment ? "实验短文" : "雅思 Task 2"} · 约{" "}
+              {countWords(essay)} 词
+            </p>
           </div>
           <p className="progress-number">{Math.round(progress * 100)}%</p>
           <div
@@ -361,6 +369,7 @@ export function PracticePage({
         onFocus={() => setInputFocused(true)}
         onBlur={() => setInputFocused(false)}
         aria-label="作文输入区"
+        name="essay-typing-input"
         autoCapitalize="off"
         autoCorrect="off"
         autoComplete="off"

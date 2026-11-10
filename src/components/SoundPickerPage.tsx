@@ -118,11 +118,8 @@ function SoundTrial({
 
   return (
     <section className="sound-trial" aria-labelledby="sound-trial-heading">
-      <p className="section-kicker">TRY IT</p>
-      <h2 id="sound-trial-heading">打字试用</h2>
-      <p>
-        直接输入下面这句话，打错时会使用当前音效包里的错误提示音。
-      </p>
+      <h2 id="sound-trial-heading">试用</h2>
+      <p>选择声音后直接输入；输错时会播放对应的错误提示音。</p>
 
       {!inputFocused ? (
         <button className="focus-prompt" type="button" onClick={focusInput}>
@@ -188,6 +185,7 @@ function SoundTrial({
         onFocus={() => setInputFocused(true)}
         onBlur={() => setInputFocused(false)}
         aria-label="音效试打输入区"
+        name="sound-trial-input"
         autoCapitalize="off"
         autoCorrect="off"
         autoComplete="off"
@@ -214,22 +212,26 @@ export function SoundPickerPage({
 
   return (
     <div className="sound-picker-page">
-      <header className="sound-picker-header">
-        <button className="back-button" type="button" onClick={onGoHome}>
-          <span aria-hidden="true">←</span>
-          返回首页
-        </button>
-        <p>ESSAYKEYS SOUND LAB</p>
-        <span>{selectedPack.name}</span>
+      <header className="app-header sound-picker-header">
+        <div className="app-header-inner">
+          <button className="back-button" type="button" onClick={onGoHome}>
+            <span aria-hidden="true">←</span>
+            返回首页
+          </button>
+          <span className="current-sound-label">
+            当前音效：{selectedPack.name}
+          </span>
+        </div>
       </header>
 
-      <main className="sound-picker-main">
+      <main
+        className="sound-picker-main skip-target"
+        id="main-content"
+        tabIndex={-1}
+      >
         <div className="sound-picker-intro">
-          <p className="section-kicker">SOUND SETTINGS</p>
-          <h1>选择你的按键音</h1>
-          <p>
-            每一套同时包含敲键盘声和打错字声。点击卡片立即保存，下次打开仍会使用。
-          </p>
+          <h1>按键音</h1>
+          <p>选择一套按键与错误提示音。点击后立即保存，并可以直接试打。</p>
         </div>
 
         <div className="sound-picker-layout">
@@ -257,13 +259,20 @@ export function SoundPickerPage({
                           aria-pressed={isSelected}
                           onClick={() => selectPack(pack.id)}
                         >
-                          <span className="sound-pack-topline">
-                            <span>{SOUND_CATEGORY_LABELS[pack.category]}</span>
-                            <span>{isSelected ? "✓ 已选择" : "选择"}</span>
+                          <span
+                            className="sound-select-indicator"
+                            aria-hidden="true"
+                          >
+                            {isSelected ? "●" : "○"}
                           </span>
-                          <strong>{pack.name}</strong>
-                          <span className="sound-pack-description">
-                            {pack.description}
+                          <span className="sound-pack-copy">
+                            <strong>{pack.name}</strong>
+                            <span className="sound-pack-description">
+                              {pack.description}
+                            </span>
+                          </span>
+                          <span className="sound-pack-action">
+                            {isSelected ? "已选择" : "选择"}
                           </span>
                         </button>
                       );
