@@ -17,6 +17,13 @@ describe("application flow", () => {
     render(<App />);
 
     expect(screen.getByRole("heading", { name: "EssayKeys" })).toBeVisible();
+    expect(
+      screen.getByRole("heading", { name: "选择一篇文章" }),
+    ).toBeVisible();
+    expect(screen.getByText("从第一个字符开始计时。")).toBeVisible();
+    expect(
+      screen.queryByText("雅思文章打字练习"),
+    ).not.toBeInTheDocument();
     expect(screen.getAllByRole("button", { name: /开始练习/ })).toHaveLength(4);
     expect(
       screen.getByRole("heading", {
@@ -117,7 +124,7 @@ describe("application flow", () => {
     act(() => {
       vi.advanceTimersByTime(120);
     });
-    expect(screen.getByText("已完成 1 次")).toBeVisible();
+    expect(screen.queryByText(/已完成/)).not.toBeInTheDocument();
     expect(input).toHaveValue("");
   });
 });

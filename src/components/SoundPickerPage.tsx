@@ -17,7 +17,6 @@ import {
 } from "../lib/soundPacks";
 import {
   initialSession,
-  isInsertionCorrect,
   updateSession,
 } from "../lib/typing";
 
@@ -46,7 +45,6 @@ function SoundTrial({
     initialSession,
   );
   const [inputFocused, setInputFocused] = useState(false);
-  const [completedLoops, setCompletedLoops] = useState(0);
   const actualText = session.typed.map((character) => character.actual).join("");
   const isComplete = session.finishedAt !== null;
 
@@ -57,12 +55,15 @@ function SoundTrial({
   }, []);
 
   useEffect(() => {
+    void unlockKeySounds(selectedPackId);
+  }, [selectedPackId]);
+
+  useEffect(() => {
     if (!isComplete) {
       return;
     }
 
     const timeout = window.setTimeout(() => {
-      setCompletedLoops((count) => count + 1);
       dispatch({ type: "reset" });
       inputRef.current?.focus();
     }, RESET_DELAY_MS);
@@ -71,7 +72,7 @@ function SoundTrial({
   }, [isComplete]);
 
   function focusInput() {
-    unlockKeySounds(selectedPackId);
+    void unlockKeySounds(selectedPackId);
     inputRef.current?.focus();
   }
 
@@ -86,13 +87,15 @@ function SoundTrial({
 
       if (inserted.length > 0) {
         dispatch({ type: "input", text: inserted, at: Date.now() });
-        playKeySound(
-          isInsertionCorrect(inserted, TRIAL_TEXT, session.typed.length)
-            ? "type"
-            : "error",
-          true,
-          selectedPackId,
-        );
+        for (const [offset, character] of Array.from(inserted).entries()) {
+          playKeySound(
+            character === TRIAL_TEXT[session.typed.length + offset]
+              ? "type"
+              : "error",
+            true,
+            selectedPackId,
+          );
+        }
       }
     } else if (actualText.startsWith(nextValue)) {
       const removedCount = actualText.length - nextValue.length;
@@ -117,8 +120,8 @@ function SoundTrial({
 
   return (
     <section className="sound-trial" aria-labelledby="sound-trial-heading">
-      <h2 id="sound-trial-heading">试用</h2>
-      <p>选择声音后直接输入；输错时会播放对应的错误提示音。</p>
+      <h2 id="sound-trial-heading">试听</h2>
+      <p>选择后直接输入，敲字与错误提示音会成对切换。</p>
 
       {!inputFocused ? (
         <button className="focus-prompt" type="button" onClick={focusInput}>
@@ -156,11 +159,6 @@ function SoundTrial({
         </span>
       </button>
 
-      <div className="trial-status" aria-live="polite">
-        <span>已完成 {completedLoops} 次</span>
-        <strong>输入中</strong>
-      </div>
-
       <textarea
         ref={inputRef}
         className="typing-input"
@@ -191,7 +189,7 @@ export function SoundPickerPage({
 
   function selectPack(packId: string) {
     onSelectPack(packId);
-    unlockKeySounds(packId);
+    void unlockKeySounds(packId);
     playKeySound("type", true, packId);
     trialInputRef.current?.focus();
   }
@@ -231,7 +229,6 @@ export function SoundPickerPage({
                 <section className="sound-category" key={category}>
                   <div className="sound-category-heading">
                     <h2>{SOUND_CATEGORY_LABELS[category]}</h2>
-                    <span>{packs.length} 套</span>
                   </div>
                   <div className="sound-pack-grid">
                     {packs.map((pack) => {
@@ -258,7 +255,7 @@ export function SoundPickerPage({
                             </span>
                           </span>
                           <span className="sound-pack-action">
-                            {isSelected ? "已选择" : "选择"}
+                            {isSelected ? "已选" : "选择"}
                           </span>
                         </button>
                       );

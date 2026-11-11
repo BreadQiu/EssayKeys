@@ -35,6 +35,7 @@ describe("key sounds", () => {
   afterEach(() => {
     vi.resetModules();
     vi.unstubAllGlobals();
+    Reflect.deleteProperty(window, "AudioContext");
   });
 
   it("plays the paired sample files for the selected pack", async () => {
@@ -87,6 +88,57 @@ describe("key sounds", () => {
     }
 
     expect(constructed).toHaveLength(16);
+  });
+
+  it("starts a separate sound source for every rapid key press", async () => {
+    const starts: Array<ReturnType<typeof vi.fn>> = [];
+
+    class FakeAudioContext {
+      state: AudioContextState = "running";
+      currentTime = 0;
+      sampleRate = 44_100;
+      destination = {};
+
+      createBufferSource() {
+        const start = vi.fn();
+        starts.push(start);
+        return {
+          buffer: null as AudioBuffer | null,
+          connect: vi.fn(),
+          start,
+        };
+      }
+
+      async decodeAudioData() {
+        return { duration: 0.16 } as AudioBuffer;
+      }
+
+      resume() {
+        return Promise.resolve();
+      }
+    }
+
+    Object.defineProperty(window, "AudioContext", {
+      configurable: true,
+      value: FakeAudioContext,
+    });
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => ({
+        ok: true,
+        arrayBuffer: async () => new ArrayBuffer(8),
+      })),
+    );
+
+    const { playKeySound, unlockKeySounds } = await import("./audio");
+    await unlockKeySounds("butter-thock");
+
+    for (let index = 0; index < 100; index += 1) {
+      playKeySound("type", true, "butter-thock");
+    }
+
+    expect(starts).toHaveLength(100);
+    expect(starts.every((start) => start.mock.calls.length === 1)).toBe(true);
   });
 
   it("uses the exact EdClub sample files for its reference pack", async () => {

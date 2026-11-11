@@ -17,7 +17,6 @@ import {
   formatDuration,
   getElapsedTime,
   initialSession,
-  isInsertionCorrect,
   updateSession,
   type TypedCharacter,
 } from "../lib/typing";
@@ -166,6 +165,10 @@ export function PracticePage({
   }, [isDirty, onDirtyChange]);
 
   useEffect(() => {
+    void unlockKeySounds(soundPackId);
+  }, [soundPackId]);
+
+  useEffect(() => {
     return () => onDirtyChange(false);
   }, [onDirtyChange]);
 
@@ -230,7 +233,7 @@ export function PracticePage({
 
   function focusInput(event?: MouseEvent<HTMLElement>) {
     event?.preventDefault();
-    unlockKeySounds(soundPackId);
+    void unlockKeySounds(soundPackId);
     inputRef.current?.focus();
   }
 
@@ -245,13 +248,15 @@ export function PracticePage({
 
       if (inserted.length > 0) {
         dispatch({ type: "input", text: inserted, at: Date.now() });
-        playKeySound(
-          isInsertionCorrect(inserted, target, session.typed.length)
-            ? "type"
-            : "error",
-          soundEnabled,
-          soundPackId,
-        );
+        for (const [offset, character] of Array.from(inserted).entries()) {
+          playKeySound(
+            character === target[session.typed.length + offset]
+              ? "type"
+              : "error",
+            soundEnabled,
+            soundPackId,
+          );
+        }
       }
     } else if (actualText.startsWith(nextValue)) {
       const removedCount = actualText.length - nextValue.length;
@@ -292,9 +297,6 @@ export function PracticePage({
             返回文章
           </button>
           <div className="practice-tools">
-            <p className="typing-status" aria-live="polite">
-              {session.startedAt === null ? "等待输入" : "计时中"}
-            </p>
             <button
               className="sound-toggle"
               type="button"
@@ -302,7 +304,7 @@ export function PracticePage({
               onClick={toggleSound}
             >
               <span aria-hidden="true">♪</span>
-              音效 {soundEnabled ? "开" : "关"}
+              {soundEnabled ? "音效开" : "音效关"}
             </button>
           </div>
         </div>

@@ -1,177 +1,122 @@
 ---
 name: EssayKeys
-description: A quiet editorial proofing interface for typing complete IELTS essays.
+description: A pure-white, text-first typing practice interface for complete IELTS essays.
 colors:
-  canvas: "#f3f5f2"
+  canvas: "#ffffff"
   surface: "#ffffff"
-  ink: "#18221d"
-  muted: "#69736d"
-  line: "#cfd6d0"
-  primary: "#285c49"
-  primary-soft: "#e2ece6"
+  ink: "#171717"
+  muted: "#737373"
+  line: "#e5e5e5"
+  line-strong: "#cfcfcf"
+  primary: "#171717"
   highlight: "#f1d45b"
-  error: "#b74640"
+  error: "#b42318"
 typography:
-  display:
+  ui:
     fontFamily: "Aptos, Segoe UI, PingFang SC, Microsoft YaHei, sans-serif"
-    fontSize: "52px"
-    fontWeight: 680
-    lineHeight: 1
-    letterSpacing: "-0.04em"
-  title:
+  essay:
     fontFamily: "Charter, Georgia, Cambria, Times New Roman, serif"
-    fontSize: "34px"
-    fontWeight: 500
-    lineHeight: 1.2
-    letterSpacing: "-0.025em"
-  body:
-    fontFamily: "Charter, Georgia, Cambria, Times New Roman, serif"
-    fontSize: "22px"
-    fontWeight: 400
-    lineHeight: 1.75
-  label:
-    fontFamily: "Aptos, Segoe UI, PingFang SC, Microsoft YaHei, sans-serif"
-    fontSize: "12px"
-    fontWeight: 500
-    lineHeight: 1.5
-rounded:
-  sm: "4px"
-  md: "8px"
-  lg: "10px"
 spacing:
   xs: "4px"
   sm: "8px"
   md: "16px"
   lg: "24px"
-  xl: "32px"
-  xxl: "48px"
-components:
-  button-primary:
-    backgroundColor: "{colors.primary}"
-    textColor: "{colors.surface}"
-    typography: "{typography.label}"
-    rounded: "{rounded.md}"
-    padding: "0 16px"
-    height: "40px"
-  button-primary-hover:
-    backgroundColor: "#1f4c3b"
-    textColor: "{colors.surface}"
-  sound-menu:
-    backgroundColor: "{colors.surface}"
-    textColor: "{colors.ink}"
-    typography: "{typography.label}"
-    rounded: "{rounded.md}"
-    padding: "0 12px"
-    height: "40px"
+  xl: "40px"
+  xxl: "72px"
 ---
 
 # Design System: EssayKeys
 
-## Overview
+## Direction
 
-**Creative North Star: "The Clean Proof"**
+EssayKeys is a single-purpose typing surface presented on an uninterrupted white page. A large serif `EssayKeys` masthead anchors the home page; the quieter index heading `选择一篇文章` introduces the task without competing with the product identity. Black and gray text establishes orientation, whitespace establishes hierarchy, and hairline rules separate only where structure would otherwise be unclear.
 
-EssayKeys should feel like a well-prepared writing proof rather than a marketing page. The interface is cool, flat and precise; typography and generous spacing establish hierarchy while rules replace decorative cards. The essay itself is the main object, and the yellow current-character highlight is the single moment of visual emphasis.
+The visual rule is simple: **white page, black type, one yellow current character**.
 
-**Key Characteristics:**
+## Color
 
-- Cool paper rather than warm cream.
-- Thin rules instead of shadows.
-- Compact Chinese UI paired with a readable English serif.
-- One meaningful accent: the current typing position.
-- The reading and typing task remains visible before any explanation.
+- **Canvas and surface** (`#ffffff`): every page and control uses the same pure-white background.
+- **Ink** (`#171717`): primary labels, headings, completed text and primary actions.
+- **Muted** (`#737373`): metadata, pending essay text and secondary navigation.
+- **Hairline** (`#e5e5e5` / `#cfcfcf`): separators and structural boundaries.
+- **Highlight** (`#f1d45b`): reserved exclusively for the character currently being typed.
+- **Error** (`#b42318`): incorrect text, indicated with color and an underline rather than a filled panel.
 
-## Colors
-
-The palette is restrained and functional, with green reserved for navigation and primary actions.
-
-### Primary
-
-- **Proof Green** (`{colors.primary}`): primary buttons, progress, active sound selection and focus.
-- **Soft Proof Green** (`{colors.primary-soft}`): selected backgrounds and restrained confirmation states.
-
-### Neutral
-
-- **Cool Paper** (`{colors.canvas}`): page background.
-- **Clean Sheet** (`{colors.surface}`): the typing surface and controls.
-- **Proof Ink** (`{colors.ink}`): primary interface text.
-- **Pencil Gray** (`{colors.muted}`): metadata, pending essay text and secondary copy.
-- **Editing Rule** (`{colors.line}`): separators and control outlines.
-
-### State
-
-- **Highlighter Yellow** (`{colors.highlight}`): current character only.
-- **Correction Red** (`{colors.error}`): incorrect character feedback only.
-
-**The One Highlight Rule.** Yellow belongs to the current character. It is never a general page accent.
+There are no tinted page sections, gradient backgrounds or decorative accent colors.
 
 ## Typography
 
-**Display Font:** Aptos with Segoe UI, PingFang SC and Microsoft YaHei fallbacks
-**Body Font:** Charter with Georgia, Cambria and Times New Roman fallbacks
+UI text uses Aptos, Segoe UI and their Chinese fallbacks. Essay titles, essay bodies and the trial sentence use Charter, Georgia and related serif fallbacks.
 
-**Character:** The sans UI stays compact and direct. The serif appears only where the user reads an article title or essay text, reinforcing the editorial setting.
+- Home masthead: 42px desktop, 37px mobile, serif weight 500.
+- Home index heading: 27px desktop, 25px mobile, weight 590.
+- Page heading: 32–34px desktop, 27–29px mobile.
+- Essay body: 21.5px desktop, 19.5px mobile, line-height 1.78–1.82.
+- Metadata and actions: 10–13px.
+- Result time: 68px desktop, 56px mobile, tabular numerals.
 
-### Hierarchy
-
-- **Display** (680, 52px desktop / 38px mobile, 1): product name on the home page.
-- **Headline** (680, 40px desktop / 34px mobile, 1.1): page titles such as `按键音`.
-- **Title** (500, 34px desktop / 28px mobile, 1.2): essay titles and compact article rows.
-- **Body** (400, 22px desktop / 20px mobile, 1.75): the English essay, held to 65–75 characters per line.
-- **Label** (500–650, 11–14px, 1.5): controls, metadata and section labels.
-
-**The Two Voices Rule.** Use sans for controls and orientation; use serif for content the user reads or types.
+English reading columns stay near 72 characters. Explanatory copy stays short and secondary to the task.
 
 ## Layout
 
-The home page uses a 1040px content width, the practice page 920px and the sound picker 1120px. Horizontal rules define sections and article rows. Page headers are 64px high with a 48px gutter, becoming 58px high with a 16px gutter on phones. Desktop practice text is limited to 72ch and the layout collapses structurally below 900px and 640px.
+- Home content width: 760px.
+- Practice content width: 780px.
+- Sound chooser width: 1000px.
+- Header height: 76px desktop, 64px mobile.
+- Mobile gutter: 16px on each side.
+- Article and sound entries use open rows with hairline separators.
+- Practice typing occurs directly on the page rather than inside a bordered card.
+- Sound trial becomes the first section below the header on tablet and mobile.
 
-**The Flat Reading Column Rule.** Content remains left-aligned and orderly. Centering is reserved for the final result.
+```text
+EssayKeys                                      ♪ 音效
 
-## Elevation & Depth
-
-The system is flat. Borders, background changes and spacing communicate hierarchy; cards do not use shadows. Sticky headers use a translucent background only to protect navigation while scrolling.
-
-## Shapes
-
-Controls and surfaces use compact radii from 4px to 10px. Article and sound lists remain unbounded rows, separated by 1px rules. Circles are limited to status dots and radio indicators.
-
-**The Rule Before Box Rule.** Prefer a divider over wrapping content in a new container.
+选择一篇文章
+从第一个字符开始计时。
+────────────────────────────────────────────
+Essay title                                 开始
+约 251 词
+────────────────────────────────────────────
+```
 
 ## Components
 
-### Buttons
-
-Buttons are compact, familiar controls rather than brand decoration. Primary buttons use Proof Green, an 8px radius and a 40px minimum height; mobile primary actions rise to 44px. Hover deepens the green, and keyboard focus uses a visible green outline.
-
 ### Navigation
 
-The header contains only orientation and current utilities. Back navigation is a quiet text button. The selected sound is a compact utility entry on the home page.
+Navigation is plain text. The home page leads with the large `EssayKeys` masthead in the upper-left and a compact sound utility in the upper-right. Practice and sound pages use a sticky white header with one bottom hairline.
 
 ### Article Rows
 
-Each row contains its category, title, word count and one `练习` action. Rows are separated by rules, acquire only a faint tint on hover, and never become elevated cards.
+Article rows show only the title, word count and a text action. The experiment article adds a small `实验短文` label. No card background, shadow or hover fill is used.
 
-### Sound Rows
+### Buttons
 
-Sound choices use a circular indicator, name, one-line description and selection label. Selected rows receive Soft Proof Green plus a 1px Proof Green outline.
+“开始” and sound actions read as compact text actions. The only filled button is the final `确认并返回` action, which uses black with a 2px radius. Focus rings are always black and visible.
 
 ### Typing Surface
 
-The typing surface is a clean white sheet with a 1px Editing Rule border and a 10px radius. Pending text is muted, correct text is dark ink, errors are red with an underline, and the current character receives Highlighter Yellow. Paragraph breaks use a small `↵` key-like marker before the required Enter input.
+The essay sits directly on white. Pending text is gray, correct text becomes near-black, incorrect text becomes red with an underline, and the current character receives the yellow highlight. Paragraph breaks use a quiet `↵` marker.
 
-## Do's and Don'ts
+### Sound Picker
 
-### Do:
+Sound packs are open, two-column rows on desktop and one-column rows on mobile. Selection is communicated by a filled black marker, heavier name and `已选` label. The trial area uses hairlines only, with no enclosing card, completion counter or restart notice.
 
-- **Do** keep the current typing position visible and unmistakable.
-- **Do** use rules, whitespace and restrained background shifts to organize content.
-- **Do** keep controls at least 44px tall on mobile.
-- **Do** preserve readable essay line lengths and clear focus states.
+## Motion
 
-### Don't:
+Transitions are limited to 140ms color feedback for controls and 70ms feedback for typed characters. Reduced-motion preferences disable smooth scrolling and transition durations.
 
-- **Don't** reintroduce warm paper grids, decorative circles, gradients or card shadows.
-- **Don't** use yellow outside the current-character state.
-- **Don't** add all-caps eyebrow labels or repeated marketing copy above headings.
-- **Don't** let secondary interface chrome become larger than the article title or typing task.
+## Accessibility
+
+- Keyboard focus remains visible throughout.
+- Touch actions are at least 44px tall.
+- Mobile layouts must maintain `scrollWidth === innerWidth`.
+- Yellow is never the only signal for an incorrect character; errors also use red and an underline.
+- Text and background contrast remain clear on the pure-white canvas.
+
+## Avoid
+
+- Cool-paper or warm-paper page backgrounds.
+- Cards, shadows, gradients, decorative circles or rounded feature panels.
+- Repeated product titles, version labels and decorative section counters.
+- Accent colors outside the current character and error states.
+- Chrome that competes visually with the essay or typing task.

@@ -1,75 +1,61 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-11T00:00:00+08:00",
+  "generatedAt": "2026-11-12T03:20:00+08:00",
   "title": "Design System: EssayKeys",
   "extensions": {
     "colorMeta": {
       "canvas": {
         "role": "neutral",
-        "displayName": "Cool Paper",
-        "canonical": "#f3f5f2",
-        "tonalRamp": ["#202622", "#3b4540", "#5e6963", "#7f8a84", "#a7b0aa", "#cbd1cd", "#e4e8e5", "#f8faf8"]
+        "displayName": "Pure White",
+        "canonical": "#ffffff",
+        "tonalRamp": ["#171717", "#404040", "#737373", "#a3a3a3", "#d4d4d4", "#e5e5e5", "#f5f5f5", "#ffffff"]
       },
       "ink": {
         "role": "neutral",
-        "displayName": "Proof Ink",
-        "canonical": "#18221d",
-        "tonalRamp": ["#101612", "#18221d", "#27332c", "#3e4b43", "#667169", "#939c96", "#c7cec9", "#f4f6f4"]
-      },
-      "muted": {
-        "role": "neutral",
-        "displayName": "Pencil Gray",
-        "canonical": "#69736d",
-        "tonalRamp": ["#222925", "#39423c", "#505b54", "#69736d", "#909a94", "#b9c1bc", "#dce1de", "#f5f7f5"]
+        "displayName": "Typing Ink",
+        "canonical": "#171717",
+        "tonalRamp": ["#000000", "#171717", "#303030", "#525252", "#737373", "#a3a3a3", "#d4d4d4", "#ffffff"]
       },
       "primary": {
         "role": "primary",
-        "displayName": "Proof Green",
-        "canonical": "#285c49",
-        "tonalRamp": ["#10261d", "#193b2d", "#214b3b", "#285c49", "#487565", "#76a092", "#b7d0c6", "#eef5f1"]
+        "displayName": "Action Black",
+        "canonical": "#171717",
+        "tonalRamp": ["#000000", "#171717", "#303030", "#525252", "#737373", "#a3a3a3", "#d4d4d4", "#ffffff"]
       },
       "highlight": {
         "role": "secondary",
-        "displayName": "Highlighter Yellow",
+        "displayName": "Current Character",
         "canonical": "#f1d45b",
         "tonalRamp": ["#3d3210", "#6a5720", "#967d31", "#c4a642", "#f1d45b", "#f7e38d", "#fbefbe", "#fff9e7"]
       },
       "error": {
         "role": "tertiary",
         "displayName": "Correction Red",
-        "canonical": "#b74640",
-        "tonalRamp": ["#321210", "#5b1d1a", "#852d29", "#b74640", "#d2726d", "#e7a5a1", "#f4d0cd", "#fff4f3"]
+        "canonical": "#b42318",
+        "tonalRamp": ["#321210", "#5b1d1a", "#852d29", "#b42318", "#d2726d", "#e7a5a1", "#f4d0cd", "#fff4f3"]
       }
     },
     "typographyMeta": {
-      "display": {
-        "displayName": "Product Name",
-        "purpose": "Home-page product name only."
+      "ui": {
+        "displayName": "Interface",
+        "purpose": "Navigation, labels, metadata and actions."
       },
-      "title": {
-        "displayName": "Essay Title",
-        "purpose": "Article titles and the reading surface."
-      },
-      "body": {
-        "displayName": "Essay Body",
-        "purpose": "IELTS article text and trial sentence."
-      },
-      "label": {
-        "displayName": "Interface Label",
-        "purpose": "Controls, metadata and status."
+      "essay": {
+        "displayName": "Essay",
+        "purpose": "Article titles, essay text and the sound trial sentence."
       }
     },
     "shadows": [],
     "motion": [
       {
-        "name": "state-standard",
-        "value": "150ms cubic-bezier(0.2, 0.75, 0.25, 1)",
-        "purpose": "Hover, focus and selected-state transitions."
+        "name": "control-state",
+        "value": "140ms cubic-bezier(0.2, 0.75, 0.25, 1)",
+        "purpose": "Hover, focus and selected text state."
       },
       {
-        "name": "typing-feedback",
-        "value": "80ms linear",
-        "purpose": "Current, correct and incorrect character changes."
+        "name": "typing-state",
+        "value": "70ms linear",
+        "purpose": "Character color and current-highlight feedback."
       }
     ],
     "breakpoints": [
@@ -85,93 +71,78 @@
   },
   "components": [
     {
-      "name": "Primary Button",
+      "name": "Text Action",
       "kind": "button",
-      "refersTo": "button-primary",
-      "description": "Compact action for starting or confirming a task.",
-      "html": "<button class=\"ds-btn-primary\">练习</button>",
-      "css": ".ds-btn-primary { min-height: 40px; padding: 0 16px; border: 1px solid var(--green, #285c49); border-radius: 8px; background: var(--green, #285c49); color: #fff; font-family: Aptos, Segoe UI, PingFang SC, sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; transition: background-color 150ms cubic-bezier(0.2,0.75,0.25,1); } .ds-btn-primary:hover { background: #1f4c3b; border-color: #1f4c3b; } .ds-btn-primary:focus-visible { outline: 2px solid #285c49; outline-offset: 3px; }"
+      "description": "Quiet text control used to begin an essay or choose a sound.",
+      "html": "<button class=\"ds-text-action\">开始</button>",
+      "css": ".ds-text-action { min-height: 44px; padding: 0; border: 0; background: transparent; color: #171717; font-family: Aptos, Segoe UI, PingFang SC, sans-serif; font-size: 12px; font-weight: 600; cursor: pointer; } .ds-text-action:focus-visible { outline: 2px solid #171717; outline-offset: 3px; }"
     },
     {
-      "name": "Sound Menu Button",
+      "name": "Primary Button",
       "kind": "button",
-      "refersTo": "sound-menu",
-      "description": "Quiet utility entry showing the active sound pack.",
-      "html": "<button class=\"ds-sound-menu\"><span>♪</span><span>音效</span><span>黄油重键</span></button>",
-      "css": ".ds-sound-menu { display: inline-flex; min-height: 40px; align-items: center; gap: 7px; padding: 0 12px; border: 1px solid #cfd6d0; border-radius: 8px; background: #fff; color: #18221d; font-family: Aptos, Segoe UI, PingFang SC, sans-serif; font-size: 12px; cursor: pointer; } .ds-sound-menu span:first-child { color: #285c49; font-size: 15px; } .ds-sound-menu:hover { border-color: #285c49; } .ds-sound-menu:focus-visible { outline: 2px solid #285c49; outline-offset: 3px; }"
+      "description": "The single filled action on the result page.",
+      "html": "<button class=\"ds-btn-primary\">确认并返回</button>",
+      "css": ".ds-btn-primary { min-height: 44px; padding: 0 20px; border: 1px solid #171717; border-radius: 2px; background: #171717; color: #fff; font-family: Aptos, Segoe UI, PingFang SC, sans-serif; font-size: 13px; font-weight: 600; } .ds-btn-primary:hover { background: #fff; color: #171717; } .ds-btn-primary:focus-visible { outline: 2px solid #171717; outline-offset: 3px; }"
     },
     {
       "name": "Article Row",
-      "kind": "card",
-      "description": "Rule-separated article directory entry.",
-      "html": "<article class=\"ds-article-row\"><div><p>雅思 Task 2</p><h3>Should University Education Be Free for Everyone?</h3></div><span>约 231 词</span><button>练习</button></article>",
-      "css": ".ds-article-row { display: grid; grid-template-columns: minmax(0,1fr) auto 72px; align-items: center; gap: 28px; min-height: 108px; padding: 22px 8px; border-bottom: 1px solid #cfd6d0; font-family: Aptos, Segoe UI, PingFang SC, sans-serif; } .ds-article-row p { margin: 0 0 6px; color: #69736d; font-size: 11px; } .ds-article-row h3 { margin: 0; color: #18221d; font-family: Charter, Georgia, serif; font-size: 22px; font-weight: 500; } .ds-article-row span { color: #69736d; font-size: 12px; } .ds-article-row button { min-height: 40px; border: 1px solid #285c49; border-radius: 8px; background: #285c49; color: #fff; cursor: pointer; }"
-    },
-    {
-      "name": "Sound Row",
-      "kind": "chip",
-      "description": "Compact selectable sound pack row with a radio-like marker.",
-      "html": "<button class=\"ds-sound-row ds-selected\"><span>●</span><span><strong>黄油重键</strong><small>低沉厚实的润滑线性轴</small></span><em>已选择</em></button>",
-      "css": ".ds-sound-row { display: grid; grid-template-columns: 16px minmax(0,1fr) auto; min-height: 76px; align-items: center; gap: 12px; padding: 12px 8px; border: 0; border-bottom: 1px solid #cfd6d0; background: transparent; color: #18221d; text-align: left; font-family: Aptos, Segoe UI, PingFang SC, sans-serif; cursor: pointer; } .ds-sound-row span:first-child { color: #69736d; } .ds-sound-row span:nth-child(2) { display: grid; gap: 4px; } .ds-sound-row strong { font-size: 16px; } .ds-sound-row small { color: #69736d; font-size: 11px; } .ds-sound-row em { color: #69736d; font-size: 11px; font-style: normal; } .ds-sound-row.ds-selected { border-radius: 8px; background: #e2ece6; outline: 1px solid #285c49; outline-offset: -1px; } .ds-sound-row.ds-selected span:first-child, .ds-sound-row.ds-selected em { color: #285c49; } .ds-sound-row:focus-visible { outline: 2px solid #285c49; outline-offset: 3px; }"
+      "kind": "row",
+      "description": "Open, rule-separated essay directory entry.",
+      "html": "<article class=\"ds-article-row\"><div><h3>Should University Education Be Free for Everyone?</h3><p>约 251 词</p></div><button>开始</button></article>",
+      "css": ".ds-article-row { display: grid; grid-template-columns: minmax(0,1fr) auto 54px; align-items: center; gap: 24px; min-height: 92px; padding: 20px 0; border-bottom: 1px solid #e5e5e5; background: #fff; } .ds-article-row h3 { margin: 0; font-family: Charter, Georgia, serif; font-size: 20px; font-weight: 500; } .ds-article-row p { margin: 7px 0 0; color: #737373; font: 11px Aptos, Segoe UI, sans-serif; } .ds-article-row button { border: 0; background: transparent; color: #171717; font-size: 12px; font-weight: 600; }"
     },
     {
       "name": "Typing Surface",
       "kind": "custom",
-      "description": "The primary reading and typing sheet.",
-      "html": "<section class=\"ds-typing-surface\"><p>Whether higher education <span class=\"ds-current\">s</span>hould be funded by the state.</p></section>",
-      "css": ".ds-typing-surface { padding: 40px 44px; border: 1px solid #cfd6d0; border-radius: 10px; background: #fff; color: #69736d; font-family: Charter, Georgia, serif; font-size: 22px; line-height: 1.75; } .ds-typing-surface p { margin: 0; } .ds-current { padding: 0 1px; border-radius: 2px; background: #f1d45b; color: #18221d; }"
+      "description": "Unboxed essay text placed directly on a white page.",
+      "html": "<p class=\"ds-essay\">Whether higher education should be funded by the state.</p>",
+      "css": ".ds-essay { max-width: 72ch; margin: 0; background: #fff; color: #939393; font-family: Charter, Georgia, serif; font-size: 21.5px; line-height: 1.82; overflow-wrap: anywhere; } .ds-current { background: #f1d45b; color: #171717; }"
     },
     {
-      "name": "Back Navigation",
-      "kind": "nav",
-      "description": "Quiet back control used across practice and sound screens.",
-      "html": "<button class=\"ds-back\"><span>←</span>返回文章</button>",
-      "css": ".ds-back { display: inline-flex; min-height: 44px; align-items: center; gap: 7px; border: 0; background: transparent; color: #69736d; font-family: Aptos, Segoe UI, PingFang SC, sans-serif; font-size: 12px; cursor: pointer; } .ds-back span { color: #285c49; font-size: 17px; } .ds-back:hover { color: #18221d; } .ds-back:focus-visible { outline: 2px solid #285c49; outline-offset: 3px; }"
+      "name": "Sound Row",
+      "kind": "row",
+      "description": "Open sound choice with a filled selection marker and paired description.",
+      "html": "<button class=\"ds-sound-row ds-selected\"><span>●</span><span><strong>黄油重键</strong><small>低沉厚实的润滑线性轴</small></span><em>已选</em></button>",
+      "css": ".ds-sound-row { display: grid; grid-template-columns: 14px minmax(0,1fr) auto; align-items: center; gap: 10px; min-height: 72px; padding: 12px 0; border: 0; border-bottom: 1px solid #e5e5e5; background: #fff; color: #171717; text-align: left; } .ds-sound-row strong { font: 650 14px Aptos, Segoe UI, sans-serif; } .ds-sound-row small { color: #737373; font: 10px Aptos, Segoe UI, sans-serif; } .ds-sound-row em { color: #171717; font: 600 10px Aptos, Segoe UI, sans-serif; font-style: normal; }"
     }
   ],
   "narrative": {
-    "northStar": "The Clean Proof",
-    "overview": "EssayKeys should feel like a well-prepared writing proof rather than a marketing page. The interface is cool, flat and precise; typography and generous spacing establish hierarchy while rules replace decorative cards. The essay itself is the main object, and the yellow current-character highlight is the single moment of visual emphasis.",
+    "northStar": "White Page, Black Type",
+    "overview": "EssayKeys is a pure-white typing surface with no decorative layer between the person and the essay. Structure comes from spacing and hairline rules; the yellow current-character signal is the only visual emphasis.",
     "keyCharacteristics": [
-      "Cool paper rather than warm cream.",
-      "Thin rules instead of shadows.",
-      "Compact Chinese UI paired with a readable English serif.",
-      "One meaningful accent: the current typing position.",
-      "The reading and typing task remains visible before any explanation."
+      "Every page and control shares a pure-white background.",
+      "Black text and hairline rules replace cards and shadows.",
+      "English essay text carries the visual identity.",
+      "Yellow appears only at the current typing position."
     ],
     "rules": [
       {
-        "name": "The One Highlight Rule",
-        "body": "Yellow belongs to the current character. It is never a general page accent.",
+        "name": "The One Background Rule",
+        "body": "Page, header, typing and sound-picker backgrounds all remain pure white.",
         "section": "colors"
       },
       {
-        "name": "The Two Voices Rule",
-        "body": "Use sans for controls and orientation; use serif for content the user reads or types.",
-        "section": "typography"
-      },
-      {
-        "name": "The Flat Reading Column Rule",
-        "body": "Content remains left-aligned and orderly. Centering is reserved for the final result.",
-        "section": "layout"
+        "name": "The One Highlight Rule",
+        "body": "Yellow belongs only to the current character.",
+        "section": "colors"
       },
       {
         "name": "The Rule Before Box Rule",
-        "body": "Prefer a divider over wrapping content in a new container.",
-        "section": "elevation"
+        "body": "Use whitespace and hairline separators before introducing a container.",
+        "section": "layout"
       }
     ],
     "dos": [
-      "Do keep the current typing position visible and unmistakable.",
-      "Do use rules, whitespace and restrained background shifts to organize content.",
-      "Do keep controls at least 44px tall on mobile.",
-      "Do preserve readable essay line lengths and clear focus states."
+      "Keep article choices and sound choices as open rows.",
+      "Keep touch targets at least 44px tall.",
+      "Keep the current character visible and unmistakable.",
+      "Keep mobile scrollWidth equal to the viewport width."
     ],
     "donts": [
-      "Don't reintroduce warm paper grids, decorative circles, gradients or card shadows.",
-      "Don't use yellow outside the current-character state.",
-      "Don't add all-caps eyebrow labels or repeated marketing copy above headings.",
-      "Don't let secondary interface chrome become larger than the article title or typing task."
+      "Do not reintroduce paper-tinted page backgrounds.",
+      "Do not add card shadows, gradients, decorative circles or rounded feature panels.",
+      "Do not repeat the product name or add decorative counters.",
+      "Do not let navigation chrome compete with essay content."
     ]
   }
 }
